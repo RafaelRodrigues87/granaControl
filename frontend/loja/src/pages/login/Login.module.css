@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif; /* Aplicando a fonte importada */
+    background-color: #ffff;
+    
+    /* Centraliza o container na tela */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 750px;
+    height: 550px;
+   
+    border-radius: 12px; /* Bordas levemente mais suaves */
+    overflow: hidden;    /* Garante que o conteúdo não escape das bordas */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra leve para profundidade */
+}
+
+/* Lado esquerdo */
+.bemvindo {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #51bd99;
+    color: #e2e7e9;
+     /* Divisória sutil */
+}
+h1{
+    font-size:40px
+}
+/* Lado direito */
+.login {
+    width: 50%;
+    display: flex;
+    color:  #51bd99;
+    flex-direction: column;
+    justify-content: center; /* Centralizado verticalmente */
+    align-items: center;     /* Centralizado horizontalmente */
+    padding: 40px;
+}
+
+/* Título */
+.tituloLogin {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.tituloLogin h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+h2{
+    font-weight: 700px;
+    font-size: 1.2rem;
+    margin-top: 30px;
+}
+
+/* Inputs e Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 280px; /* Limita a largura para não esticar demais */
+}
+
+.inputEmail,
+.inputSenha {
+    padding: 10px 15px; /* Mais respiro interno */
+    border: 1px solid #b7b6b6;
+    background-color:#b7b6b6;
+    border-radius: 6px;
+    width: 100%; /* Ocupa todo o espaço do form */
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.inputEmail:focus,
+.inputSenha:focus {
+    border-width: 2px; /* Feedback visual ao clicar */
+}
+
+/* Botão (Caso você adicione um) */
+.logar {
+    padding: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    border: 2px solid  #51bd99;
+    background-color: #51bd99;
+    text-align: center;
+    margin-top: 50px;
+    height: 40px;
+    width: 150px;
+    border-radius: 18px;
+    transition: 0.3s;
+    transition: all 0.3s ease-in-out;
+}
+
+.logar:hover {
+    background: #e2e7e9;
+    color:  #51bd99;
+
+    border: 2px solid  #51bd99;
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.registra {
+    padding: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    border: 2px solid #e2e7e9;
+    background-color:#51bd99;
+    color: #e2e7e9;
+    text-align: center;
+    margin-top: 20px;
+    height: 40px;
+    width: 150px;
+    border-radius: 18px;
+    transition: 0.3s;
+    transition: all 0.3s ease-in-out;
+}
+
+.registra:hover {
+    background: #e2e7e9;
+    color:  #51bd99;
+    border: 2px solid  #51bd99;
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.logar:focus,
+.registra:focus {
+
+    outline: none; 
+    
+    
+}
