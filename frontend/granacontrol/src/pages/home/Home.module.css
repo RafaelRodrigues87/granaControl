@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.mainContent {
+  /* Margem esquerda igual à largura da sidebar para não sobrepor */
+  margin-left: 260px; 
+  flex: 1;
+  background-color: #f4f7f9;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.titulo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.navlinks {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.navlinks a {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+}
+
+.content {
+  padding: 40px;
+}

@@ -40,6 +40,7 @@ function Cadastro() {
 
 
     return (
+        <><h2 className={styles.titulo1}>GranaControl</h2>
         <div className={styles.container}>
             <div className={styles.registrar}>
                 <h1 className={styles.titulo}>Faça Seu Cadastro</h1>
@@ -61,7 +62,7 @@ function Cadastro() {
                 <h2>Utilize ela clicando abaixo!</h2>
                 <button className={styles.BotaoLogin} onClick={clicar}>Login</button>
             </div>
-        </div>
+        </div></>
     );
 }
 

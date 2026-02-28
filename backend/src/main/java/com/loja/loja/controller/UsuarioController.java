@@ -1,7 +1,9 @@
 package com.loja.loja.controller;
 
-import com.loja.loja.entity.Usuario;
+import com.loja.loja.entities.Usuario;
+import com.loja.loja.security.JwtService;
 import com.loja.loja.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,9 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
+    @Autowired
+    private JwtService jwtService;
+
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService){
@@ -20,30 +25,41 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastrar")
-    public Usuario criar(@RequestBody Usuario usuario){
-        return usuarioService.salvar(usuario);
+    public ResponseEntity<?> cadastrar(@RequestBody Usuario usuario) {
+        usuarioService.salvar(usuario);
+        return ResponseEntity.ok(
+                Map.of("mensagem", "Usuário cadastrado com sucesso")
+        );
     }
+
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(@RequestBody Map<String, String> dados){
-        String email = dados.get("email");
-        String senha = dados.get("senha");
+    public ResponseEntity<?> login(@RequestBody Map<String, String> dados) {
+        Usuario usuario = usuarioService.login(
+                dados.get("email"),
+                dados.get("senha")
+        );
 
-        Usuario usuario = usuarioService.login(email, senha);
-        return ResponseEntity.ok(usuario);
+        String token = jwtService.gerarToken(usuario.getEmail());
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "token", token,
+                        "usuario", usuario
+                )
+        );
     }
-
 
 
 
     @GetMapping("/listar")
     public List<Usuario> listar(){
-        return usuarioService.ListarTodos();
+        return usuarioService.listarTodos();
     }
 
     @GetMapping("buscar/{id}")
     public Usuario buscar(@PathVariable Long id){
-        return usuarioService.BuscarPorId(id);
+        return usuarioService.buscarPorId(id);
     }
     @DeleteMapping("deletar/{id}")
     public void deletar(@PathVariable Long id){

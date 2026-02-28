@@ -19,7 +19,7 @@ export async function CadastrarUsuario(dados){
 
 export async function LoginUsuario(email, senha) {
     try{
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/usuario/login`,{
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/login`,{
         method: "POST",
         headers:{
             'Content-Type': 'application/json'
