@@ -1,0 +1,5 @@
+name: granacontrol
+values:
+  - key: localhost
+    value: ''
+    enabled: true

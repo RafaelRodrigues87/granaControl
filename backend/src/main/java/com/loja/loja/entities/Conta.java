@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -21,9 +23,9 @@ public class Conta {
     private String nome;
 
     @Column(nullable = false)
-    private Double saldo;
+    private BigDecimal saldo;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 }

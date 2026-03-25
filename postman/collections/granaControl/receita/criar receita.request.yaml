@@ -1,0 +1,30 @@
+$kind: http-request
+name: criar receita
+description: >-
+  This request un-registers a token by using the token collection variable in
+  the POST body.
+
+
+  We also added a test to ensure the response has a 200 OK status code.
+url: http://localhost:8080/usuarios/login
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "email": "rafaelrodigues87@gmail.com",
+        "senha": "123"
+    }
+auth:
+  credentials:
+    - key: token
+      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYWZhZWxyb2RpZ3Vlczg3QGdtYWlsLmNvbSIsImlhdCI6MTc3NDIxNjUwOCwiZXhwIjoxNzc0MjIwMTA4fQ.UYtKvNkbNUTaQ-eaq9fXuDAZIp0JVzidQ7yh-SIMBUM
+  type: bearer
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Returns 200 OK status", () => {
+          pm.response.to.have.status(200)
+      })
+    language: text/javascript
+order: 1774393451007

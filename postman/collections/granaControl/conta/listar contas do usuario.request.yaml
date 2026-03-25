@@ -1,0 +1,5 @@
+$kind: http-request
+name: listar contas do usuario
+url: ""
+method: GET
+order: 4163328593781148

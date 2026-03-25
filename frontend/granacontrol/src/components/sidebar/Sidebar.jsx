@@ -29,7 +29,7 @@ const Sidebar = () => {
               >
                 Dashboard
               </NavLink>
-            <ul className={styles.submenu}>
+              
               <li>
                 <NavLink
                   to="/resumo"
@@ -50,7 +50,7 @@ const Sidebar = () => {
              className={({isActive})=>
             isActive ? `${styles.navLink} ${styles.active}`: styles.navLink}>Despesas</NavLink>
               </li>
-            </ul>
+            
           </li>
           <li className={styles.navItem}>
             <NavLink

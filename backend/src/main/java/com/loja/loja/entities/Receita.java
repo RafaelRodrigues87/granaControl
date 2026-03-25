@@ -6,8 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Receita {
 
@@ -16,7 +22,7 @@ public class Receita {
     private Long id;
 
     @Column(nullable = false)
-    private Double valor;
+    private BigDecimal valor;
 
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -29,10 +35,6 @@ public class Receita {
     @ManyToOne
     @JoinColumn(name = "conta_id")
     private Conta conta;
-
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
 
 
 }

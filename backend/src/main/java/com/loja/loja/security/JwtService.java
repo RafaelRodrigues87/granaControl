@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 
-
 @Service
 public class JwtService {
+
     private final String Secret = "RafaelRodriguesBezerraRamosOtacianoBezerra";
     private final long EXPIRATION = 1000 * 60 * 60;
 
@@ -25,11 +25,12 @@ public class JwtService {
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
     public String extrairEmail(String token){
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)   // CORREÇÃO AQUI
                 .getBody()
                 .getSubject();
     }
@@ -39,7 +40,7 @@ public class JwtService {
             Jwts.parserBuilder()
                     .setSigningKey(getKey())
                     .build()
-                    .parseClaimsJwt(token);
+                    .parseClaimsJws(token);   // CORREÇÃO AQUI
             return true;
         } catch(JwtException | IllegalArgumentException e){
             return false;
