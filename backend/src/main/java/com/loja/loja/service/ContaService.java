@@ -36,4 +36,11 @@ public class ContaService {
     public List<Conta> listarContas(Long usuarioId){
         return contaRepository.findByUsuarioId(usuarioId);
     }
+
+    public void deletarConta(Long contaId){
+        Conta conta = contaRepository.findById(contaId)
+                .orElseThrow(()-> new RuntimeException("Conta nao encontrada"));
+
+        contaRepository.delete(conta);
+    }
 }

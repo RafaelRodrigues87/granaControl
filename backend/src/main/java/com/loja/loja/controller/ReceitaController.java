@@ -46,7 +46,9 @@ public class ReceitaController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public void deletarReceita(@PathVariable Long id){
+    public List<Receita> deletarReceita(@PathVariable Long id,
+                                        @RequestBody Long UsuarioId){
         receitaService.deletarReceita(id);
+        return  receitaService.BuscarPorConta(UsuarioId);
     }
 }

@@ -1,0 +1,5 @@
+$kind: http-request
+name: deletar conta
+url: ""
+method: GET
+order: 4411009455403526
