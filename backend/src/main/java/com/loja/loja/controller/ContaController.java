@@ -1,6 +1,7 @@
 package com.loja.loja.controller;
 import com.loja.loja.entities.Conta;
 import com.loja.loja.service.ContaService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class ContaController {
     }
 
     @PostMapping("/criar/{usuarioId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public Conta criarConta(
             @PathVariable Long usuarioId,
             @RequestBody Conta conta){

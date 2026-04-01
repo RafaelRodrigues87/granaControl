@@ -19,6 +19,7 @@ public class ReceitaController {
     }
 
     @PostMapping("/adicionar/{usuarioId}/{contaId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Receita> criarReceita(
             @PathVariable Long usuarioId,
             @PathVariable Long contaId,
