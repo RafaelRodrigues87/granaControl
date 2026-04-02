@@ -1,0 +1,5 @@
+$kind: http-request
+name: listar categoria
+url: ""
+method: GET
+order: 1775168496636

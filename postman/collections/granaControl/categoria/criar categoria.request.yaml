@@ -1,0 +1,5 @@
+$kind: http-request
+name: criar categoria
+url: ""
+method: GET
+order: 2737816215005290
