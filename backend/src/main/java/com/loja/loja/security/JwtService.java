@@ -2,6 +2,7 @@ package com.loja.loja.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -10,11 +11,12 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final String Secret = "RafaelRodriguesBezerraRamosOtacianoBezerra";
+    @Value("${jwt.secret}")
+    private String secret;
     private final long EXPIRATION = 1000 * 60 * 60;
 
     private Key getKey(){
-        return Keys.hmacShaKeyFor(Secret.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String gerarToken(String email){
