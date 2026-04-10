@@ -1,0 +1,5 @@
+$kind: http-request
+name: listar todas as contas
+url: "{{localhost}}usuarios/contas/usuario/1"
+method: GET
+order: 4163328593781148

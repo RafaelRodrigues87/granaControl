@@ -29,7 +29,7 @@ public class ContaController {
         return contaService.listarContas(usuarioId);
     }
 
-    @DeleteMapping("deletar/{contaId}/{usuarioId}")
+    @DeleteMapping("/deletar/{contaId}/{usuarioId}")
     public List<Conta> deletarConta(
             @PathVariable Long contaId,
             @PathVariable Long usuarioId){

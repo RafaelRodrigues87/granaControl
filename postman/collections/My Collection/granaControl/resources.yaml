@@ -3,6 +3,7 @@ workspace:
   id: a2538a41-b6c6-473a-85f1-94d55be7908f
 
 # Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
 cloudResources:
   collections:
     ..\postman\collections\granaControl: 48059127-70402fb9-1686-4f32-9637-fe2c2934af0c

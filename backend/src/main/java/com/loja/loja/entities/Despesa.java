@@ -24,11 +24,14 @@ public class Despesa {
     private BigDecimal valor;
 
     @Column(nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-aa")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
     @Column(nullable = false)
     private String status;
+
+    @Column(nullable = false)
+    private String descricao;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")

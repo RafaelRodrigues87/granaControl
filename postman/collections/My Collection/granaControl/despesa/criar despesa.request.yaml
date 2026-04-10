@@ -1,0 +1,18 @@
+$kind: http-request
+name: criar despesa
+url: "{{localhost}}usuarios/despesas/criar/1/2/1"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"valor\" : 100.00,\r
+
+    \    \"data\" : \"2020-12-16\",\r
+
+    \    \"status\" : \"pago\"\r
+
+    \r
+
+    }"
+order: 1775860395148

@@ -1,0 +1,5 @@
+$kind: http-request
+name: deletar despesa
+url: ""
+method: GET
+order: 3848018484600577

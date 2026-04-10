@@ -1,27 +1,30 @@
 package com.loja.loja.service;
 
-
 import com.loja.loja.entities.Usuario;
 import com.loja.loja.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
 
+@Service
 public class UsuarioService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository){
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario salvar(Usuario usuario){
+
+        if (usuario.getSenha() == null || usuario.getSenha().isEmpty()) {
+            throw new RuntimeException("Senha obrigatória");
+        }
+
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         return usuarioRepository.save(usuario);
     }
@@ -36,21 +39,22 @@ public class UsuarioService {
     }
 
     public Usuario login(String email, String senha){
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
 
-        System.out.println("Senha digitada: '" + senha + "'");
-        System.out.println("Senha do banco: '" + usuario.getSenha() + "'");
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email ou senha inválidos"));
 
         if (!passwordEncoder.matches(senha, usuario.getSenha())) {
-            throw new RuntimeException("Senha inválida");
+            throw new RuntimeException("Email ou senha inválidos");
         }
 
         return usuario;
     }
 
     public void deletar(Long id){
-        usuarioRepository.deleteById(id);
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
+
+        usuarioRepository.delete(usuario);
     }
 }
-

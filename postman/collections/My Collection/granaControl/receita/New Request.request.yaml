@@ -1,0 +1,5 @@
+$kind: http-request
+name: New Request
+url: "{{localhost}}usuarios/receitas/deletar/3"
+method: DELETE
+order: 2879258691497944

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface DespesaRepository extends JpaRepository<Despesa, Long> {
     List<Despesa> findByUsuarioId(Long usuarioId);
+    List<Despesa> findByContaUsuarioId(Long contaid);
 }
 /* repository.save(meuUsuario);            // Salva no banco (INSERT)
 repository.findAll();                    // Traz todos os usuários (SELECT *)

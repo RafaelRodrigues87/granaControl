@@ -1,0 +1,12 @@
+$kind: http-request
+name: atualizar despesas
+url: "{{localhost}}usuarios/despesas/atualizar/3"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"descricao\" : \"comprei presente\"\r
+
+    }"
+order: 3723349364710579

@@ -28,6 +28,9 @@ public class Receita {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
+    @Column(nullable = false)
+    private String descricao;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;

@@ -6,7 +6,7 @@ description: >-
 
 
   We also added a test to ensure the response has a 200 OK status code.
-url: http://localhost:8080/usuarios/login
+url: "{{localhost}}usuarios/login"
 method: POST
 body:
   type: json
@@ -17,8 +17,7 @@ body:
     }
 auth:
   credentials:
-    - key: token
-      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYWZhZWxyb2RpZ3Vlczg3QGdtYWlsLmNvbSIsImlhdCI6MTc3NDIxNjUwOCwiZXhwIjoxNzc0MjIwMTA4fQ.UYtKvNkbNUTaQ-eaq9fXuDAZIp0JVzidQ7yh-SIMBUM
+    token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYWZhZWxyb2RpZ3Vlczg3QGdtYWlsLmNvbSIsImlhdCI6MTc3NDIxNjUwOCwiZXhwIjoxNzc0MjIwMTA4fQ.UYtKvNkbNUTaQ-eaq9fXuDAZIp0JVzidQ7yh-SIMBUM
   type: bearer
 scripts:
   - type: afterResponse

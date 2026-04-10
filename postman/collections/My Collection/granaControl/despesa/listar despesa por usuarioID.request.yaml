@@ -1,0 +1,5 @@
+$kind: http-request
+name: listar despesa por usuarioID
+url: ""
+method: GET
+order: 2618691806014969
