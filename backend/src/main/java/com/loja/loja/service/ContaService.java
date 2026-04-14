@@ -3,10 +3,12 @@ import com.loja.loja.entities.Conta;
 import com.loja.loja.entities.Usuario;
 import com.loja.loja.repository.ContaRepository;
 import com.loja.loja.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContaService {
@@ -37,6 +39,17 @@ public class ContaService {
         return contaRepository.findByUsuarioId(usuarioId);
     }
 
+    public Conta atualizarConta(Long id, Conta contaAtualizada){
+        Conta conta = contaRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("conta nao encontrada"));
+
+        Optional.ofNullable(contaAtualizada.getNome()).ifPresent(conta::setNome);
+        Optional.ofNullable(contaAtualizada.getSaldo()).ifPresent(conta::setSaldo);
+
+        return contaRepository.save(conta);
+    }
+
+    @Transactional
     public void deletarConta(Long contaId){
         Conta conta = contaRepository.findById(contaId)
                 .orElseThrow(()-> new RuntimeException("Conta nao encontrada"));

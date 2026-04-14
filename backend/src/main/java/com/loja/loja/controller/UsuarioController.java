@@ -62,6 +62,12 @@ public class UsuarioController {
         return usuarioService.buscarPorId(id);
     }
 
+    @PutMapping("/atualizar/{id}")
+    public Usuario atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado){
+        Usuario usuario = usuarioService.atualizarUsuario(id, usuarioAtualizado);
+        return usuarioService.salvar(usuario);
+    }
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<?> deletar(@PathVariable Long id){
         usuarioService.deletar(id);

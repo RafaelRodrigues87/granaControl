@@ -2,6 +2,7 @@ package com.loja.loja.controller;
 import com.loja.loja.entities.Conta;
 import com.loja.loja.service.ContaService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -27,6 +28,13 @@ public class ContaController {
     public List<Conta> listarContas(
             @PathVariable Long usuarioId){
         return contaService.listarContas(usuarioId);
+    }
+
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Conta> atualizaConta(@PathVariable Long id, @RequestBody Conta contaAtualizada){
+        Conta conta = contaService.atualizarConta(id, contaAtualizada);
+
+        return ResponseEntity.ok(conta);
     }
 
     @DeleteMapping("/deletar/{contaId}/{usuarioId}")

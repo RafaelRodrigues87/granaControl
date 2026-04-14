@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -36,6 +37,16 @@ public class CategoriaService {
                 .orElseThrow(() -> new RuntimeException("Categoria nao encontrada"));
     }
 
+    public Categoria atualizarCategoria(Long id, Categoria categoriaAtualizada){
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Categoria nao encontrada"));
+
+        Optional.ofNullable(categoriaAtualizada.getNome()).ifPresent(categoria::setNome);
+        Optional.ofNullable(categoriaAtualizada.getCategoria()).ifPresent(categoria::setCategoria);
+
+        return categoriaRepository.save(categoria);
+    }
+
     @Transactional
     public void deletarCategoriaNome(String nome) {
         if (categoriaRepository.findByNome(nome) == null) {
@@ -44,6 +55,7 @@ public class CategoriaService {
         categoriaRepository.deleteByNome(nome);
     }
 
+    @Transactional
     public void deletarCategoriaId(Long id) {
         // findById retorna um Optional, então verificamos se está presente
         if (!categoriaRepository.existsById(id)) {

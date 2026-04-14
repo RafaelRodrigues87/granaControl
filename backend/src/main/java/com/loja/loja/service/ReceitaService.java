@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReceitaService {
@@ -48,6 +49,18 @@ public class ReceitaService {
 
         contaRepository.save(conta);
         return receitaRepository.save(receita);
+    }
+
+    //valor, data, descicao
+    public Receita atualizarReceita(Long id, Receita receitaAtualizada){
+        Receita receita = receitaRepository.findById(id)
+                .orElseThrow (()-> new RuntimeException("receita nao encontrada"));
+
+        Optional.ofNullable(receitaAtualizada.getValor()).ifPresent(receita::setValor);
+        Optional.ofNullable(receitaAtualizada.getData()).ifPresent(receita::setData);
+        Optional.ofNullable(receitaAtualizada.getDescricao()).ifPresent(receita::setDescricao);
+
+       return receitaRepository.save(receita);
     }
 
         @Transactional

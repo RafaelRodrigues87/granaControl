@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -49,6 +50,23 @@ public class UsuarioService {
 
         return usuario;
     }
+
+
+    //nome, data_nascimento, telefone, cpf, email, senha
+    public Usuario atualizarUsuario(Long id, Usuario novoUsuario) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        // Lógica funcional com Optional
+        Optional.ofNullable(novoUsuario.getNome()).ifPresent(usuario::setNome);
+        Optional.ofNullable(novoUsuario.getDataNascimento()).ifPresent(usuario::setDataNascimento);
+        Optional.ofNullable(novoUsuario.getTelefone()).ifPresent(usuario::setTelefone);
+        Optional.ofNullable(novoUsuario.getCpf()).ifPresent(usuario::setCpf);
+
+        return usuarioRepository.save(usuario);
+    }
+
+
 
     public void deletar(Long id){
 

@@ -46,6 +46,15 @@ public class ReceitaController {
         return ResponseEntity.ok(receitas);
     }
 
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Receita> atualizarReceita(@PathVariable Long id, @RequestBody Receita receitaAtualizado){
+        // O serviço já deve cuidar de buscar, validar e salvar
+        Receita receita = receitaService.atualizarReceita(id, receitaAtualizado);
+
+        // Retornamos 200 OK com o objeto atualizado
+        return ResponseEntity.ok(receita);
+    }
+
     @DeleteMapping("/deletar/{id}")
     public List<Receita> deletarReceita(@PathVariable Long id,
                                         @RequestBody Long UsuarioId){

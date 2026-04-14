@@ -30,6 +30,12 @@ public class CategoriaController {
         return categoriaService.listarCategoria();
     }
 
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable Long id, @RequestBody Categoria categoriaAtualizada){
+        Categoria categoria = categoriaService.atualizarCategoria(id, categoriaAtualizada);
+        return ResponseEntity.ok(categoria);
+    }
+
     @DeleteMapping("/deletar/{nome}")
     public ResponseEntity<Void> deletarCategoriaNome(@PathVariable String nome) {
         categoriaService.deletarCategoriaNome(nome);
