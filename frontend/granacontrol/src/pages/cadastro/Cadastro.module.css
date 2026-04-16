@@ -1,169 +1,173 @@
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&display=swap');
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    .titulo1 {
-        font-family: "Oswald", sans-serif;
-        color: #51bd99; /* Corrigido para 6 dígitos */
-    font-size: 30px; 
-    
-        position: absolute; 
-        top: -10px;   
-        left: 20px;  
-        
-        /* Layout */
-        display: flex;
-        padding: 10px 20px;
-        z-index: 1000;      
-    }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@500;700&display=swap');
 
+:root {
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --primary-color: #6366f1;
+  --dark-blue: #1e1b4b;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-page: fff;
+  --input-bg: rgba(255, 255, 255, 0.15); /* Inputs semi-transparentes para o fundo roxo */
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff !important;
+  overflow-x: hidden;
+}
 
-    body {
-        font-family: 'Open Sans', sans-serif; /* Aplicando a fonte importada */
-        background-color: #ffff;
-        
-        /* Centraliza o container na tela */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+.pageWrapper {
 
-    .container {
-        display: flex;
-        width: 750px;
-        height: 550px;
-    
-        border-radius: 12px; /* Bordas levemente mais suaves */
-        overflow: hidden;    /* Garante que o conteúdo não escape das bordas */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra leve para profundidade */
-    }
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente */
+  width: 100%;
+  min-height: 90vh;       /* Ocupa no mínimo a altura da tela */
+  background-color:var( --bg-page);
+  padding: 20px;
+  box-sizing: border-box;  /* Garante que o padding não "estoure" a largura */
 
-    /* Lado esquerdo */
-    .registrar {
-        width: 50%;
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background-color: #51bd99;
-        color: #ffff;
-        /* Divisória sutil */
-    }
-    h1{
-        font-size:40px;
-        
-    }
-    /* Lado direito */
-    .login {
-        width: 50%;
-        display: flex;
-        color:  #51bd99;
-        flex-direction: column;
-        justify-content: center; /* Centralizado verticalmente */
-        align-items: center;     /* Centralizado horizontalmente */
-        padding: 40px;
-    }
+}
+.titulo1 {
+  font-family: "Oswald", sans-serif;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: absolute;
+  top: 30px;
+  left: 40px;
+}
 
-    /* Título */
-    .tituloLogin,
-    .titulo {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+.mainContainer {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 650px;
+  background-color:var( --bg-page);
+  border-radius: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
 
-    .tituloLogin h2 {
-        font-weight: 700;
-        font-size: 1.8rem;
-    }
+/* --- LADO ESQUERDO (CADASTRO NO ROXO) --- */
+.formSide {
+  flex: 1.3;
+  background: var(--primary-gradient);
+  padding: 50px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+}
 
-    h2{
-        font-weight: 700px;
-        font-size: 1.2rem;
-        margin-top: 30px;
-    }
+.formHeader h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: white;
+}
 
-    /* Inputs e Formulário */
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        max-width: 280px; /* Limita a largura para não esticar demais */
-    }
+.inputGroup {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-    .BotaoLogin {
-        padding: 10px;
-        cursor: pointer;
-        font-weight: 600;
-        border: 2px solid  #51bd99;
-        background-color: #51bd99;
-        text-align: center;
-        margin-top: 50px;
-        height: 40px;
-        width: 150px;
-        border-radius: 18px;
-        transition: 0.3s;
-        transition: all 0.3s ease-in-out;
-    }
+.inputGroup label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
 
-    .BotaoLogin:hover {
-        background: #e2e7e9;
-        color:  #51bd99;
+.inputGroup input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background-color: var(--input-bg);
+  color: white;
+  outline: none;
+  transition: all 0.3s;
+}
 
-        border: 2px solid  #51bd99;
-        transform: scale(1.03);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    .registra {
-        padding: 10px;
-        cursor: pointer;
-        font-weight: 600;
-        border: 2px solid #e2e7e9;
-        background-color:#51bd99;
-        color: #e2e7e9;
-        text-align: center;
-        
-        height: 40px;
-        width: 100%;
-        border-radius: 18px;
-        transition: 0.3s;
-        transition: all 0.3s ease-in-out;
-    }
+.inputGroup input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
 
-    .registra:hover {
-        background: #e2e7e9;
-        color:  #51bd99;
-        border: 2px solid  #51bd99;
-        transform: scale(1.03);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    .BotaoLogin:focus,
-    .registra:focus {
+.inputGroup input:focus {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: white;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+}
 
-        outline: none; 
-        
-        
-    }
-    input{
-        padding: 10px 15px; /* Mais respiro interno */
-        border: 1px solid #b7b6b6;
-        background-color:#b7b6b6;
-        border-radius: 6px;
-        width: 100%; /* Ocupa todo o espaço do form */
-        font-size: 14px;
-        outline: none;
-        transition: 0.2s;
-    }
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        max-width: 280px; /* Limita a largura para não esticar demais */
-    }
+.btnSubmit {
+  width: 100%;
+  background: white;
+  color: var(--primary-color);
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: 0.3s;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  background: #f8fafc;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* --- LADO DIREITO (CHAMADA BRANCA) --- */
+.brandSide {
+  flex: 0.7;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+}
+
+.brandSide h1 {
+  font-size: 1.8rem;
+  color: var(--dark-blue);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.brandSide p {
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.btnGhost {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 12px 35px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btnGhost:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .mainContainer { flex-direction: column; }
+  .brandSide { order: 2; padding: 40px 20px; }
+  .formSide { order: 1; }
+}

@@ -28,7 +28,7 @@ export async function LoginUsuario(email, senha) {
     });
      const resultado = await response.json();
          
-        if(!response.ok) throw new Error(resultado.error || "erro ao cadastrar usuario");
+        if(!response.ok) throw new Error(resultado.error || "erro ao logar usuario");
         return resultado;
     }catch(err){
         throw err;

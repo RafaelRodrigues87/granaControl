@@ -1,161 +1,261 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@500;700&display=swap');
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --primary-color: #6366f1;
+  --dark-blue: #1e1b4b;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-page: #f8fafc;
+  --input-bg: #f1f5f9;
+}
+
+/* RESET */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.titulo {
-    font-family: "Oswald", sans-serif;
-    color: #51bd99; /* Corrigido para 6 dígitos */
-   font-size: 30px; 
-   
-    position: absolute; 
-    top: -10px;   
-    left: 20px;  
-    
-    /* Layout */
-    display: flex;
-    padding: 10px 20px;
-    z-index: 1000;      
+:global(html), :global(body), :global(#root) {
+  height: 100%;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
 }
 
-.container {
-    display: flex;
-    width: 750px;
-    height: 550px;
-   
-    border-radius: 12px; /* Bordas levemente mais suaves */
-    overflow: hidden;    /* Garante que o conteúdo não escape das bordas */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra leve para profundidade */
+.pageWrapper {
+
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente */
+  width: 100%;
+  min-height: 90vh;       /* Ocupa no mínimo a altura da tela */
+  background-color:var( --bg-page);
+  padding: 20px;
+  box-sizing: border-box;  /* Garante que o padding não "estoure" a largura */
+
 }
 
-/* Lado esquerdo */
-.bemvindo {
-    width: 50%;
-    padding: 40px;
-    display: flex;
+
+
+/* Se o container interno estiver sumindo ou quebrando, 
+
+   adicione uma largura máxima responsiva */
+
+.mainContainer {
+
+  display: flex;
+  width: 100%;
+  max-width: 1000px; /* Não deixa passar de 1000px */
+  min-height: 600px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+}
+
+
+
+/* --- LADO ESQUERDO (BRAND) --- */
+.brandSide {
+  flex: 1.1;
+  background: var(--primary-gradient);
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoIcon {
+  background: rgba(255, 255, 255, 0.2);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.4rem;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.brandName {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.brandName span {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.welcomeText h1 {
+  font-size: 2.4rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.welcomeText p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  max-width: 320px;
+}
+
+.btnGhost {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.btnGhost:hover {
+  background: white;
+  color: var(--primary-color);
+  border-color: white;
+}
+
+/* --- LADO DIREITO (FORM) --- */
+.formSide {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.formHeader {
+  margin-bottom: 35px;
+}
+
+.formHeader h2 {
+  font-size: 1.8rem;
+  color: var(--dark-blue);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.formHeader p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* INPUTS MELHORADOS */
+.inputGroup {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background-color: var(--input-bg);
+  color: var(--text-main);
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+
+.inputGroup input::placeholder {
+  color: #94a3b8;
+}
+
+.inputGroup input:focus {
+  background-color: #fff;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.formOptions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+}
+
+.forgotPass {
+  font-size: 0.85rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.forgotPass:hover {
+  opacity: 0.8;
+}
+
+.btnSubmit {
+  width: 100%;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 900px) {
+  .mainContainer {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: #51bd99;
-    color: #e2e7e9;
-     /* Divisória sutil */
-}
-h1{
-    font-size:40px
-}
-/* Lado direito */
-.login {
-    width: 50%;
-    display: flex;
-    color:  #51bd99;
-    flex-direction: column;
-    justify-content: center; /* Centralizado verticalmente */
-    align-items: center;     /* Centralizado horizontalmente */
-    padding: 40px;
-}
+    min-height: auto;
+    margin: 20px;
+  }
 
-/* Título */
-.tituloLogin {
-    text-align: center;
-    margin-bottom: 30px;
-}
+  .brandSide {
+    display: none; /* Mantendo seu padrão de esconder o lado visual no mobile */
+  }
 
-.tituloLogin h2 {
-    font-weight: 700;
-    font-size: 1.8rem;
-}
-
-h2{
-    font-weight: 700px;
-    font-size: 1.2rem;
-    margin-top: 30px;
-}
-
-/* Inputs e Formulário */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 280px;
-    align-items: center; /* Limita a largura para não esticar demais */
-}
-
-.inputEmail,
-.inputSenha {
-    padding: 10px 15px; /* Mais respiro interno */
-    border: 1px solid #b7b6b6;
-    background-color:#b7b6b6;
-    border-radius: 6px;
-    width: 100%; /* Ocupa todo o espaço do form */
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s;
-}
-
-.inputEmail:focus,
-.inputSenha:focus {
-    border-width: 2px; /* Feedback visual ao clicar */
-}
-
-/* Botão (Caso você adicione um) */
-.logar {
-    padding: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    border: 2px solid  #51bd99;
-    background-color: #51bd99;
-    text-align: center;
-    margin-top: 50px;
-    height: 40px;
-    width: 150px;
-    border-radius: 18px;
-    transition: 0.3s;
-    transition: all 0.3s ease-in-out;
-}
-
-.logar:hover {
-    background: #e2e7e9;
-    color:  #51bd99;
-
-    border: 2px solid  #51bd99;
-    transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-
-.registra {
-    padding: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    border: 2px solid #e2e7e9;
-    background-color:#51bd99;
-    color: #e2e7e9;
-    text-align: center;
-    margin-top: 20px;
-    height: 40px;
-    width: 150px;
-    border-radius: 18px;
-    transition: 0.3s;
-    transition: all 0.3s ease-in-out;
-}
-
-.registra:hover {
-    background: #e2e7e9;
-    color:  #51bd99;
-    border: 2px solid  #51bd99;
-    transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.logar:focus,
-.registra:focus {
-
-    outline: none; 
-    
-    
+  .formSide {
+    padding: 40px 20px;
+  }
 }
