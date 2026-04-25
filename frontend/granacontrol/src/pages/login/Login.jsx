@@ -1,6 +1,7 @@
 import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import{LoginUsuario} from  "../../service/UsuarioService";
 
 function Login() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function Login() {
       const usuario = await LoginUsuario(email, senha);
       
 
-       localStorage.setItem("token", usuario.token);
+      localStorage.setItem("token", usuario.token);
       localStorage.setItem("usuario", JSON.stringify(usuario.usuario));
       alert("login realizado");
       navigate("/");
@@ -30,7 +31,7 @@ function Login() {
         <div className={styles.brandSide}>
           <div className={styles.logoWrapper}>
             <span className={styles.logoIcon}>$</span>
-            <h2 className={styles.brandName}>Grana<span>Control</span></h2>
+            <h2 className={styles.brandName}>GranaControl</h2>
           </div>
           
           <div className={styles.welcomeText}>

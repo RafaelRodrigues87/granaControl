@@ -4,6 +4,7 @@ import Login from './pages/login/Login'
 import Cadastro from './pages/cadastro/Cadastro'
 import Home from './pages/home/Home'
 import PrivateRoute from './privateRoute/PrivateRoute'
+import Receita from './pages/receitas/Receitas'
 function App() {
   return (
     <BrowserRouter>
@@ -13,9 +14,9 @@ function App() {
 
         <Route path="/"  
         element={
-          <PrivateRoute><Home /></PrivateRoute>
-        }
+          <PrivateRoute><Home /></PrivateRoute>}
         ></Route>
+        <Route path="/receita" element={ <PrivateRoute><Receita /></PrivateRoute>}></Route>
       </Routes>
     </BrowserRouter>
   )

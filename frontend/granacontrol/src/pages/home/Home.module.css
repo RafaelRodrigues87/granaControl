@@ -1,42 +1,195 @@
-.container {
-  display: flex;
+/* Aplique isso no container que envolve o card */
+.main-content {
+  background-color: #dfe2e6; /* Um tom Slate clarinho */
   min-height: 100vh;
+  padding: 40px;
+}.cardUsuario {
+  background: #ffffff;
+  padding: 32px; /* Mais respiro interno */
+  border-radius: 20px; /* Bordas mais arredondadas ficam mais modernas */
+  width: 380px;
+  margin-left: 100px; /* Ajustado conforme sua necessidade */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  
+  /* Sombra mais suave e espalhada */
+/* Adiciona uma aura sutil no tom da sua marca */
+box-shadow: 
+  0 15px 35px rgba(15, 23, 42, 0.05), /* Sombra azul escura (marca) */
+  0 5px 10px rgba(99, 102, 241, 0.02); /* Brilho Índigo muito sutil */
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.mainContent {
-  /* Margem esquerda igual à largura da sidebar para não sobrepor */
-  margin-left: 260px; 
-  flex: 1;
-  background-color: #f4f7f9;
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.navbar {
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px; /* Squircle (quadrado arredondado) */
+  background: var(--accent-gradient);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  /* Centraliza a letra R */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.infoGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.email {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.divider {
+  height: 1px;
+  background: #f1f5f9;
+  width: 100%;
+}
+
+.details {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background-color: white;
-  border-bottom: 1px solid #e0e0e0;
 }
 
-.titulo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.navlinks {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.navlinks a {
-  text-decoration: none;
-  color: #666;
+.label {
+  color: #64748b;
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
-.content {
-  padding: 40px;
+.value {
+  color: var(--primary-blue);
+  font-weight: 700;
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+
+/*card receitas */
+.cardReceitas {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  margin-left: 100px; /* Mantendo o padrão que você pediu */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), 0 8px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.h2Receitas {
+  color: var(--primary-blue);
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.listaReceitas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.itemReceita {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.itemReceita:hover {
+  background-color: #f8fafc;
+}
+
+.itemIcon {
+  background: rgba(16, 185, 129, 0.1); /* Fundo verde clarinho para o ícone */
+  padding: 10px;
+  border-radius: 10px;
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemInfo {
+  flex: 1;
+}
+
+.itemDescricao {
+  color: var(--primary-blue);
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.itemData {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.itemValor {
+  color: #10b981; /* Verde esmeralda para receitas */
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.emptyMessage {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .cardReceitas {
+    margin-left: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0; /* Sidebar provavelmente vira hambúrguer ou some */
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* Centraliza o card no mobile */
+  }
+
+  .cardUsuario {
+    margin-left: 0; /* Remove os 100px no mobile */
+    max-width: 100%; /* Card expande conforme a tela */
+  }
+}
+
+/* Ajuste para telas médias (evita que o card fique colado na borda) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .cardUsuario {
+    margin-left: 50px; /* Reduz a distância em telas de laptop médio */
+  }
 }

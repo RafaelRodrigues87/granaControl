@@ -1,15 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@700&display=swap');
+
+:root {
+  /* Tons de Azul Profundo */
+  --bg-sidebar: linear-gradient(135deg, #0a0f1a 0%, #020617 100%);
+  --bg-card: rgba(30, 41, 59, 0.3);
+  --primary-blue: #0a101f;
+  --darker-blue: #01030d;
+  
+  /* Cores de Acento (Índigo/Roxo) */
+  --accent-primary: #3638ae;
+  --accent-secondary: #610bac;
+  --accent-gradient: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  
+  /* Texto */
+  --text-white: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-active: #ffffff;
+  
+  /* Utilitários */
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --input-bg: rgba(255, 255, 255, 0.15);
+}
+
 .sidebar {
   position: fixed;
   left: 0;
   top: 0;
   width: 260px;
   height: 100vh;
-  background-color: #0b141e;
-  color: white;
+  background: var(--bg-sidebar);
   padding: 24px;
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  font-family: 'Inter', sans-serif;
+  border-right: 1px solid var(--glass-border);
 }
 
 .logo {
@@ -17,19 +42,36 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 40px;
-  font-size: 1.25rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-white);
 }
 
 .logoIcon {
-  background-color: #00A38E;
-  width: 30px;
-  height: 30px;
+  /* Gradiente roxo estiloso no fundo do ícone */
+  background:linear-gradient(135deg, #000000 0%, #070b14 100%);
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 14px;
+  
+  /* Cor do ícone em si (o caractere/letra) */
+  color: #c1c8d3;
+  font-weight: 800;
+  font-size: 1.5rem;
+  
+  /* Efeito premium para fundo branco */
+  backdrop-filter: blur(6px);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
 }
+
 
 .navMenu ul {
   list-style: none;
@@ -39,82 +81,126 @@
   display: flex;
   align-items: center;
   padding: 12px;
-  color: #8a94a6;
+  color: var(--text-muted);
   text-decoration: none;
   border-radius: 8px;
-  transition: 0.2s;
+  transition: 0.3s;
   font-size: 0.95rem;
+  font-weight: 500;
 }
 
+/* Hover original preservado com variáveis */
 .navLink:hover {
-  background-color: rgba(0, 163, 142, 0.1);
-  color: #00A38E;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--accent-primary);
 }
 
-/* O item ativo com a barrinha verde colada na esquerda */
+/* Ativo original preservado com variáveis */
 .active {
-  color: white !important;
+  color: var(--text-active) !important;
+  background-color: rgba(99, 102, 241, 0.08);
   position: relative;
 }
 
 .active::before {
   content: "";
   position: absolute;
-  left: -24px; /* Isso faz a barra "colar" no canto da tela */
+  left: -24px;
   top: 20%;
   height: 60%;
   width: 4px;
-  background-color: #00A38E;
+  background-color: var(--accent-primary);
   border-radius: 0 4px 4px 0;
+  box-shadow: 2px 0 10px rgba(99, 102, 241, 0.4);
 }
 
 .submenu {
   margin-left: 20px;
   margin-top: 5px;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 1px solid var(--glass-border);
   list-style: none;
 }
 
 .metasCard {
   margin-top: auto;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 16px;
-  border-radius: 12px;
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 16px;
   margin-bottom: 20px;
+  border: 1px solid var(--glass-border);
 }
 
 .progressContainer {
   width: 100%;
-  height: 6px;
-  background: #1e293b;
+  height: 8px;
+  background: var(--darker-blue);
   border-radius: 10px;
-  margin: 10px 0;
+  margin: 12px 0;
+  overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  background-color: #00A38E;
+  background: var(--accent-gradient);
   border-radius: 10px;
+  transition: width 0.5s ease;
 }
 
-.metasValues {
-  font-size: 0.75rem;
-  display: flex;
-  justify-content: space-between;
+.current { 
+  color: var(--accent-secondary);
+  font-weight: bold; 
 }
 
-.current { color: #00A38E; font-weight: bold; }
-.total { color: #8a94a6; }
+.total { 
+  color: var(--text-muted); 
+}
 
 .btnLogout {
   background: none;
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 20px;
-  color: #8a94a6;
+  border-top: 1px solid var(--glass-border);
+  padding: 20px 10px 0;
+  color: var(--text-muted);
   cursor: pointer;
   text-align: left;
   font-size: 0.95rem;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
-.btnLogout:hover { color: white; }
+.btnLogout:hover { 
+  color: #ef4444;
+}
+
+.logoText {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.logoText strong {
+  font-weight: 800; /* Parte mais grossa */
+  color: #ffffff; /* Opcional: deixar o "GRANA" mais brilhante */
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espaço entre o ícone e o texto */
+  padding: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btnLogout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* ... resto do seu código ... */
+}

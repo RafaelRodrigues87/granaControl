@@ -52,6 +52,19 @@ public class UsuarioController {
         );
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Usuario> extrairToken(@RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtService.extrairEmail(token);
+
+        Usuario usuario = usuarioService.buscarPorEmail(email);
+
+        usuario.setSenha(null);
+
+        return ResponseEntity.ok(usuario);
+    }
+
     @GetMapping("/listar")
     public List<Usuario> listar(){
         return usuarioService.listarTodos();

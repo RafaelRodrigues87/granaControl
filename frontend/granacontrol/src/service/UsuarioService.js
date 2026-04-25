@@ -34,3 +34,26 @@ export async function LoginUsuario(email, senha) {
         throw err;
     }
 }
+
+export const buscarUsuario = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/me`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    const resultado = await response.json();
+
+    if (!response.ok) {
+      throw new Error(resultado.error || "erro ao consumir usuario");
+    }
+
+    return resultado;
+
+  } catch (err) {
+    throw err;
+  }
+};

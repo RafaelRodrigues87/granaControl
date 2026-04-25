@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@500;700&display=swap');
 
 :root {
-  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   --primary-color: #6366f1;
   --dark-blue: #1e1b4b;
   --text-main: #1e293b;
@@ -85,7 +85,15 @@
   font-weight: 800;
   font-size: 1.4rem;
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  
+}
+/* Efeito de hover opcional para dar vida ao dashboard */
+.logoWrapper:hover .logoIcon {
+  transform: scale(1.07 ) rotate(-3deg);
+  border-color: rgba(99, 102, 241, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.87);
+  box-shadow: 0 12px 20px -5px rgba(99, 102, 241, 0.3);
 }
 
 .brandName {
@@ -111,12 +119,14 @@
   line-height: 1.2;
 }
 
-.welcomeText p {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  opacity: 0.85;
-  max-width: 320px;
-}
+  .welcomeText p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    opacity: 0.85;
+    max-width: 320px;
+    display: flex;
+    align-items: center;
+  }
 
 .btnGhost {
   background: transparent;

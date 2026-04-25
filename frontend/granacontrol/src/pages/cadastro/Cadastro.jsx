@@ -38,6 +38,7 @@ function Cadastro() {
     
          
          <div className={styles.mainContainer}>
+        
             {/* FORMULÁRIO À ESQUERDA */}
             <div className={styles.formSide}>
                <div className={styles.formHeader}>
@@ -74,6 +75,11 @@ function Cadastro() {
 
             {/* CHAMADA LOGIN À DIREITA */}
             <div className={styles.brandSide}>
+
+               <div className={styles.logoWrapper}>
+                  <span className={styles.logoIcon}>$</span>
+                  <h2 className={styles.brandName}>Grana<span>Control</span></h2>
+                </div>
                <h1>Bem-vindo!</h1>
                <p>Já possui uma conta no GranaControl? Entre agora para gerenciar suas finanças.</p>
                <button className={styles.btnGhost} onClick={() => navigate('/')}>Fazer Login</button>

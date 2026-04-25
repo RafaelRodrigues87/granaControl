@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@500;700&display=swap');
 
 :root {
-  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  --primary-color: #6366f1;
+  --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --primary-color:  #0f172a;
   --dark-blue: #1e1b4b;
   --text-main: #1e293b;
   --text-muted: #64748b;
@@ -125,6 +125,58 @@ html, body {
 }
 
 /* --- LADO DIREITO (CHAMADA BRANCA) --- */
+
+/*logo*/
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* Aumentei levemente o respiro */
+  margin-top: -200px; /* Ajuste esse valor para subir o quanto quiser */
+  padding-bottom: 20px;
+}
+
+.logoIcon {
+  /* Gradiente roxo estiloso no fundo do ícone */
+  background:linear-gradient(135deg, #1e293b 0%, #1b2b4f 100%);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  
+  /* Cor do ícone em si (o caractere/letra) */
+  color: #c1c8d3;
+  font-weight: 800;
+  font-size: 1.5rem;
+  
+  /* Efeito premium para fundo branco */
+  backdrop-filter: blur(6px);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+}
+
+.brandName {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+  /* Degradê no texto para ficar bem moderno */
+  background: linear-gradient(135deg, #1e293b 0%, #1b2b4f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Efeito de hover opcional para dar vida ao dashboard */
+.logoWrapper:hover .logoIcon {
+  transform: scale(1.05) rotate(-3deg);
+  border-color: rgba(20, 21, 46, 0.5);
+  box-shadow: 0 12px 20px -5px rgba(99, 102, 241, 0.3);
+}
 .brandSide {
   flex: 0.7;
   padding: 60px;
@@ -139,6 +191,8 @@ html, body {
 .brandSide h1 {
   font-size: 1.8rem;
   color: var(--dark-blue);
+  display:flex;
+  margin-top: 150px;
   margin-bottom: 15px;
   font-weight: 700;
 }
@@ -147,6 +201,8 @@ html, body {
   color: var(--text-muted);
   margin-bottom: 30px;
   line-height: 1.6;
+  display:flex;
+  margin-top: 10px; 
 }
 
 .btnGhost {
@@ -162,11 +218,18 @@ html, body {
 }
 
 .btnGhost:hover {
-  background: var(--primary-color);
+  background: #0d121f;
   color: white;
 }
 
 @media (max-width: 900px) {
+  .logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* Aumentei levemente o respiro */
+  margin-top: 10px; /* Ajuste esse valor para subir o quanto quiser */
+  padding-bottom: 20px;
+}
   .mainContainer { flex-direction: column; }
   .brandSide { order: 2; padding: 40px 20px; }
   .formSide { order: 1; }

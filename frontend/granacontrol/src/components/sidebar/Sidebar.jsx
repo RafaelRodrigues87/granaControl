@@ -1,68 +1,83 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import styles from './Sidebar.module.css'; // Importando o objeto styles
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  PieChart, 
+  ArrowUpCircle, 
+  ArrowDownCircle, 
+  User, 
+  LogOut 
+} from 'lucide-react'; // Importando os ícones
+import styles from './Sidebar.module.css';
+
 const Sidebar = () => {
+  const navigate = useNavigate();
 
-        const navigate = useNavigate();
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
 
-        function handleLogout(){
-            localStorage.removeItem("token");
-            navigate("/login")
-        }
-    
   return (
     <aside className={styles.sidebar}>
+      {/* Estilo de Logo: Metade Strong, Metade Normal */}
       <div className={styles.logo}>
         <span className={styles.logoIcon}>$</span>
-        <span className={styles.logoText}>GranaControl</span>
+        <span className={styles.logoText}>
+          <strong>GRANA</strong>CONTROL
+        </span>
       </div>
 
       <nav className={styles.navMenu}>
         <ul>
-          <li className={styles.navItem}>
-           <NavLink 
-                to="/" 
-                className={({ isActive }) => 
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                }
-              >
-                Dashboard
-              </NavLink>
-              
-              <li>
-                <NavLink
-                  to="/resumo"
-                  className={({isActive})=>
-                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-                    Resumo
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                to="/receita"
-                className={({isActive})=>
-                isActive ? `${styles.navLink} ${styles.active}`: styles.navLink}>Receita</NavLink>
-              </li>
-              <li>
-             <NavLink
-             to="/despesas"
-             className={({isActive})=>
-            isActive ? `${styles.navLink} ${styles.active}`: styles.navLink}>Despesas</NavLink>
-              </li>
-            
+          <li>
+            <NavLink 
+              to="/" 
+              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
+            >
+              <LayoutDashboard size={20} />
+              Dashboard
+            </NavLink>
           </li>
-          <li className={styles.navItem}>
+          
+          <li>
             <NavLink
-            to="/conta"
-            className={({isActive})=>
-            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Conta</NavLink>
+              to="/resumo"
+              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
+            >
+              <PieChart size={20} />
+              Resumo
+            </NavLink>
           </li>
-          <li className={styles.navItem}>
+
+          <li>
             <NavLink
-            to="/despesas"
-            className={({isActive})=>
-            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>Despesas</NavLink>
+              to="/receita"
+              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
+            >
+              <ArrowUpCircle size={20} />
+              Receita
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/despesas"
+              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
+            >
+              <ArrowDownCircle size={20} />
+              Despesas
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/conta"
+              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
+            >
+              <User size={20} />
+              Conta
+            </NavLink>
           </li>
         </ul>
       </nav>
@@ -72,7 +87,7 @@ const Sidebar = () => {
           <span>💰 Poupança</span>
         </div>
         <div className={styles.progressContainer}>
-          <div className={styles.progressBar} style={{ width: '65%' }}></div>
+          <div className={styles.progressBar} style={{ width: '64%' }}></div>
         </div>
         <div className={styles.metasValues}>
           <span className={styles.current}>R$ 3.200</span>
@@ -80,8 +95,8 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <button className={styles.btnLogout}
-      onClick={handleLogout}>
+      <button className={styles.btnLogout} onClick={handleLogout}>
+        <LogOut size={20} />
         Sair
       </button>
     </aside>
