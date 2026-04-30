@@ -2,11 +2,13 @@ import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import{LoginUsuario} from  "../../service/UsuarioService";
+import ModalRecuperarSenha from "../../components/RecuperarSenha/ModalRecuperarSenha";
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [modalAberto, setModalAberto] = useState(false); // ✅ adicionado
 
  const handleLogin = async (e) =>{
     e.preventDefault();
@@ -40,7 +42,7 @@ function Login() {
           </div>
 
           <button className={styles.btnGhost} onClick={() => navigate('/cadastro')}>
-            Não tenho conta. Criar agora
+            Não tenho conta. Criar agora!
           </button>
         </div>
 
@@ -75,7 +77,9 @@ function Login() {
             </div>
 
             <div className={styles.formOptions}>
-              <span className={styles.forgotPass}>Esqueceu a senha?</span>
+              <span className={styles.forgotPass} onClick={() => setModalAberto(true)}>
+                Esqueceu a senha?
+              </span>
             </div>
 
             <button type="submit" className={styles.btnSubmit}>
@@ -85,7 +89,11 @@ function Login() {
         </div>
 
       </div>
+           {/* ✅ modal fora do mainContainer */}
+      {modalAberto && <ModalRecuperarSenha onClose={() => setModalAberto(false)} />}
+    
     </div>
+    
   );
 }
 

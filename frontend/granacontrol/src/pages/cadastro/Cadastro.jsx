@@ -78,7 +78,7 @@ function Cadastro() {
 
                <div className={styles.logoWrapper}>
                   <span className={styles.logoIcon}>$</span>
-                  <h2 className={styles.brandName}>Grana<span>Control</span></h2>
+                  <h2 className={styles.Nome}>Grana<span>Control</span></h2>
                 </div>
                <h1>Bem-vindo!</h1>
                <p>Já possui uma conta no GranaControl? Entre agora para gerenciar suas finanças.</p>

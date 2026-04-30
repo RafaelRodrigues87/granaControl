@@ -3,9 +3,11 @@ package com.loja.loja.controller;
 import java.util.List;
 
 import com.loja.loja.entities.Receita;
+import com.loja.loja.entities.Usuario;
 import com.loja.loja.service.ReceitaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,9 +41,15 @@ public class ReceitaController {
         return ResponseEntity.ok(receitas);
     }
 
+    //busca pelo id do token
+    @GetMapping("/lista/usuario")
+    public ResponseEntity<List<Receita>> listarPorUsuario(@AuthenticationPrincipal Usuario usuario) {
+        List<Receita> receitas = receitaService.BuscarPorConta(usuario.getId());
+        return ResponseEntity.ok(receitas);
+    }
     //procura e lista as receitas pelo id do usuario
     @GetMapping("/lista/usuario/{usuarioid}")
-    public ResponseEntity<List<Receita>> ListarPorUsuario(@PathVariable Long UsuarioId){
+    public ResponseEntity<List<Receita>> ListarPorUsuarioId(@PathVariable Long UsuarioId){
         List<Receita> receitas = receitaService.BuscarPorConta(UsuarioId);
         return ResponseEntity.ok(receitas);
     }

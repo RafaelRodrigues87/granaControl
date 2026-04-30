@@ -90,6 +90,14 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
+
+
     </dependencies>
 
 	<build>

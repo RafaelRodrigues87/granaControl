@@ -56,4 +56,8 @@ public class ContaService {
 
         contaRepository.delete(conta);
     }
+
+    public BigDecimal calcularSaldoTotal(Long usuarioId){
+        return contaRepository.somarSaldoPorUsuario(usuarioId);
+    }
 }

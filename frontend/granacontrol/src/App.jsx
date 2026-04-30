@@ -5,12 +5,17 @@ import Cadastro from './pages/cadastro/Cadastro'
 import Home from './pages/home/Home'
 import PrivateRoute from './privateRoute/PrivateRoute'
 import Receita from './pages/receitas/Receitas'
+import Conta from './pages/conta/Conta'
 function App() {
   return (
+  
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro/>}></Route>
+
+        
+       <Route path="/conta" elemnt={<PrivateRoute><Conta /></PrivateRoute>}></Route>
 
         <Route path="/"  
         element={

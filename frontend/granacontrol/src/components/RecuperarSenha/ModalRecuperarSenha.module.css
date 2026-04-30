@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: white;
+  border-radius: 24px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 450px;
+  min-height: 300px; /* ✅ garante altura mínima */
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: visible; /* ✅ garante que o botão não seja cortado */
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #f1f5f9;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10; /* ✅ garante que fica por cima */
+}
+
+.closeBtn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.steps {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 32px;
+  margin-top: 16px; /* ✅ empurra a barra pra baixo do botão fechar */
+}
+
+.stepDot {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+.stepDot.active { background: #6366f1; }
+.stepDot.done { background: #a5b4fc; }
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.modal h2 {
+  font-size: 1.5rem;
+  color: #1e1b4b;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.modal p {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+
+.inputGroup input:focus {
+  background-color: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.erro {
+  display: block;
+  font-size: 0.82rem;
+  color: #ef4444;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sucesso {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.successIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.8rem;
+  color: white;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35);
+}

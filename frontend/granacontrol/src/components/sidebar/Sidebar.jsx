@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'; // ✅ aqui
+import { NavLink, useNavigate } from 'react-router-dom'; // ✅ removeu useState daqui
 import { 
   LayoutDashboard, 
   PieChart, 
@@ -7,10 +7,12 @@ import {
   ArrowDownCircle, 
   User, 
   LogOut 
-} from 'lucide-react'; // Importando os ícones
+} from 'lucide-react';
 import styles from './Sidebar.module.css';
+import { buscarSaldoTotal } from "../../service/ContaService";
 
 const Sidebar = () => {
+  const [saldoTotal, setSaldoTotal] = useState(0);
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -18,9 +20,14 @@ const Sidebar = () => {
     navigate("/login");
   }
 
+  useEffect(() => {
+    buscarSaldoTotal()
+      .then(setSaldoTotal)
+      .catch(console.error);
+  }, []); // ✅ removeu dependência de "usuario" que não existe aqui
+
   return (
     <aside className={styles.sidebar}>
-      {/* Estilo de Logo: Metade Strong, Metade Normal */}
       <div className={styles.logo}>
         <span className={styles.logoIcon}>$</span>
         <span className={styles.logoText}>
@@ -31,50 +38,31 @@ const Sidebar = () => {
       <nav className={styles.navMenu}>
         <ul>
           <li>
-            <NavLink 
-              to="/" 
-              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-            >
+            <NavLink to="/" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               <LayoutDashboard size={20} />
               Dashboard
             </NavLink>
           </li>
-          
           <li>
-            <NavLink
-              to="/resumo"
-              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-            >
+            <NavLink to="/resumo" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               <PieChart size={20} />
               Resumo
             </NavLink>
           </li>
-
           <li>
-            <NavLink
-              to="/receita"
-              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-            >
+            <NavLink to="/receita" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               <ArrowUpCircle size={20} />
               Receita
             </NavLink>
           </li>
-
           <li>
-            <NavLink
-              to="/despesas"
-              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-            >
+            <NavLink to="/despesas" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               <ArrowDownCircle size={20} />
               Despesas
             </NavLink>
           </li>
-
           <li>
-            <NavLink
-              to="/conta"
-              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-            >
+            <NavLink to="/conta" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               <User size={20} />
               Conta
             </NavLink>
@@ -90,8 +78,7 @@ const Sidebar = () => {
           <div className={styles.progressBar} style={{ width: '64%' }}></div>
         </div>
         <div className={styles.metasValues}>
-          <span className={styles.current}>R$ 3.200</span>
-          <span className={styles.total}>/ R$ 5.000</span>
+          <span>R$ {saldoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
       </div>
 

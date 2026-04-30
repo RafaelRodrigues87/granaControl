@@ -1,4 +1,5 @@
 $kind: collection
+name: My Collection
 description: |-
   ### Welcome to Postman! This is your first collection. 
 
@@ -11,3 +12,5 @@ description: |-
   Update the name and overview whenever you’re ready to make it yours.
 
   [Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)
+variables:
+  localhost: ""

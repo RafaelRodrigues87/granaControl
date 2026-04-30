@@ -218,8 +218,10 @@ html, body {
 }
 
 .btnGhost:hover {
-  background: #0d121f;
+   transform: translateY(-2px);
+  background:var(--primary-color);
   color: white;
+  border-color: var(--primary-color);
 }
 
 @media (max-width: 900px) {

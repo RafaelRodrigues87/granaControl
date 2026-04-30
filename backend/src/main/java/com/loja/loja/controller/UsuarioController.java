@@ -4,6 +4,8 @@ import com.loja.loja.entities.Usuario;
 import com.loja.loja.security.JwtService;
 import com.loja.loja.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,13 +55,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Usuario> extrairToken(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> getMe(@AuthenticationPrincipal UserDetails userDetails) {
 
-        String token = authHeader.replace("Bearer ", "");
-        String email = jwtService.extrairEmail(token);
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("Usuário não autenticado");
+        }
 
-        Usuario usuario = usuarioService.buscarPorEmail(email);
-
+        Usuario usuario = usuarioService.buscarPorEmail(userDetails.getUsername());
         usuario.setSenha(null);
 
         return ResponseEntity.ok(usuario);
@@ -75,10 +77,21 @@ public class UsuarioController {
         return usuarioService.buscarPorId(id);
     }
 
+    @PutMapping("/atualizar")
+    public ResponseEntity<Usuario> atualizarUsuario(
+            @AuthenticationPrincipal Usuario usuario,
+            @RequestBody Usuario usuarioAtualizado) {
+
+        Usuario atualizado = usuarioService.atualizarUsuario(usuario.getId(), usuarioAtualizado);
+        return ResponseEntity.ok(atualizado);
+    }
     @PutMapping("/atualizar/{id}")
-    public Usuario atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado){
-        Usuario usuario = usuarioService.atualizarUsuario(id, usuarioAtualizado);
-        return usuarioService.salvar(usuario);
+    public ResponseEntity<Usuario> atualizarUsuarioID(
+            @PathVariable Long id,
+            @RequestBody Usuario usuarioAtualizado) {
+
+        Usuario atualizado = usuarioService.atualizarUsuario(id, usuarioAtualizado);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/deletar/{id}")
@@ -87,5 +100,21 @@ public class UsuarioController {
         return ResponseEntity.ok(
                 Map.of("mensagem", "Usuário deletado com sucesso")
         );
+    }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity<String> solicitarRecuperacao(@RequestBody Map<String, String> body) {
+        try {
+            usuarioService.solicitarRecuperacao(body.get("email"));
+            return ResponseEntity.ok("Código enviado para o e-mail");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // ✅ retorna o erro real
+        }
+    }
+
+    @PostMapping("/verificar-codigo")
+    public ResponseEntity<String> verificarCodigo(@RequestBody Map<String, String> body) {
+        usuarioService.redefinirSenha(body.get("email"), body.get("codigo"), body.get("novaSenha"));
+        return ResponseEntity.ok("Senha redefinida com sucesso");
     }
 }

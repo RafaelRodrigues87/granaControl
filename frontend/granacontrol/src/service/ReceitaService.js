@@ -3,7 +3,7 @@ export async function ListarReceitaUsuario(usuarioId){
 
         const token = localStorage.getItem("token");
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/receitas/lista/usuario/${usuarioId}`,{
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/receitas/lista/usuario`,{
             method:"GET",
             headers:{
                 "Content-Type": "application/json",
@@ -22,3 +22,10 @@ export async function ListarReceitaUsuario(usuarioId){
         throw err;
     }
 }
+
+// export async function AdicionarReceita(UsuarioId){
+//     try{
+//         const token = localStorage.getItem("token")
+//         const response = await fetch(`${import.meta.env.VITE_API_URL}/`)
+//     }
+// }

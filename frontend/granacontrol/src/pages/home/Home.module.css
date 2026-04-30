@@ -1,24 +1,54 @@
-/* Aplique isso no container que envolve o card */
-.main-content {
-  background-color: #dfe2e6; /* Um tom Slate clarinho */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@700&display=swap');
+
+:root {
+  --primary-blue: #1e293b;
+  --text-muted: #64748b;
+  --accent-gradient: linear-gradient(135deg, #6366f1, #4f46e5);
+  --bg-page: #f1f4f8;
+  --card-shadow: 0 4px 24px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+:global(body) {
+  background-color: #f1f4f8;
+  margin: 0;
+  padding: 0;
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
   min-height: 100vh;
-  padding: 40px;
-}.cardUsuario {
+  width: 100%;
+  max-width: 100%; /* 🔥 evita passar da tela */
+  overflow-x: hidden; /* 🔥 corta qualquer excesso horizontal */
+  background-color: var(--bg-page);
+}
+
+.content {
+  margin-left: 260px;
+  padding: 32px 24px;
+  flex: 1;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+/* CARD USUÁRIO */
+.cardUsuario {
   background: #ffffff;
-  padding: 32px; /* Mais respiro interno */
-  border-radius: 20px; /* Bordas mais arredondadas ficam mais modernas */
-  width: 380px;
-  margin-left: 100px; /* Ajustado conforme sua necessidade */
+  padding: 28px;
+  border-radius: 20px;
+  width: 300px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
-  /* Sombra mais suave e espalhada */
-/* Adiciona uma aura sutil no tom da sua marca */
-box-shadow: 
-  0 15px 35px rgba(15, 23, 42, 0.05), /* Sombra azul escura (marca) */
-  0 5px 10px rgba(99, 102, 241, 0.02); /* Brilho Índigo muito sutil */
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .header {
@@ -28,40 +58,47 @@ box-shadow:
 }
 
 .avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px; /* Squircle (quadrado arredondado) */
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   background: var(--accent-gradient);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-  /* Centraliza a letra R */
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.3rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 .infoGroup {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
 }
 
 .userName {
   color: var(--primary-blue);
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .email {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .divider {
   height: 1px;
   background: #f1f5f9;
-  width: 100%;
 }
 
 .details {
@@ -71,37 +108,36 @@ box-shadow:
 }
 
 .label {
-  color: #64748b;
+  color: var(--text-muted);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .value {
   color: var(--primary-blue);
   font-weight: 700;
+  font-size: 0.85rem;
   background: #f1f5f9;
   padding: 4px 12px;
   border-radius: 8px;
 }
 
-
-/*card receitas */
+/* CARD RECEITAS */
 .cardReceitas {
   background: #ffffff;
-  padding: 32px;
+  padding: 28px;
   border-radius: 20px;
-  width: 100%;
-  max-width: 500px;
-  margin-left: 100px; /* Mantendo o padrão que você pediu */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), 0 8px 16px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  flex: 1;
+  min-width: 280px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .h2Receitas {
   color: var(--primary-blue);
   font-family: 'Oswald', sans-serif;
-  font-size: 1.4rem;
-  margin-bottom: 24px;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -109,7 +145,7 @@ box-shadow:
 .listaReceitas {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 .itemReceita {
@@ -118,7 +154,11 @@ box-shadow:
   padding: 12px;
   border-radius: 12px;
   transition: background 0.2s ease;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.itemReceita:last-child {
+  border-bottom: none;
 }
 
 .itemReceita:hover {
@@ -126,24 +166,29 @@ box-shadow:
 }
 
 .itemIcon {
-  background: rgba(16, 185, 129, 0.1); /* Fundo verde clarinho para o ícone */
+  background: rgba(16, 185, 129, 0.08);
   padding: 10px;
   border-radius: 10px;
   margin-right: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .itemInfo {
   flex: 1;
+  overflow: hidden;
 }
 
 .itemDescricao {
   color: var(--primary-blue);
   font-weight: 600;
-  font-size: 1rem;
-  margin: 0;
+  font-size: 0.9rem;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .itemData {
@@ -153,43 +198,44 @@ box-shadow:
 }
 
 .itemValor {
-  color: #10b981; /* Verde esmeralda para receitas */
+  color: #10b981;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  margin-left: 12px;
 }
 
 .emptyMessage {
   color: var(--text-muted);
   text-align: center;
-  padding: 20px;
+  padding: 32px 20px;
   font-style: italic;
+  font-size: 0.9rem;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .cardReceitas {
-    margin-left: 0;
-    max-width: 100%;
+/* RESPONSIVIDADE */
+@media (max-width: 1024px) {
+  .content {
+    padding: 24px 16px;
+  }
+
+  .cardUsuario {
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
   .content {
-    margin-left: 0; /* Sidebar provavelmente vira hambúrguer ou some */
-    padding: 20px;
-    display: flex;
-    justify-content: center; /* Centraliza o card no mobile */
+    margin-left: 0;
+    padding: 20px 16px;
+    flex-direction: column;
   }
 
   .cardUsuario {
-    margin-left: 0; /* Remove os 100px no mobile */
-    max-width: 100%; /* Card expande conforme a tela */
+    width: 100%;
   }
-}
 
-/* Ajuste para telas médias (evita que o card fique colado na borda) */
-@media (max-width: 1024px) and (min-width: 769px) {
-  .cardUsuario {
-    margin-left: 50px; /* Reduz a distância em telas de laptop médio */
+  .cardReceitas {
+    min-width: unset;
   }
 }
