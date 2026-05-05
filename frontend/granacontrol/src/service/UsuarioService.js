@@ -53,7 +53,7 @@ export const buscarUsuario = async () => {
 };
 
 
-    export async function atualizarUsuario(dados){
+ export async function atualizarUsuario(dados){
         const token = localStorage.getItem("token");
         try{
             const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/atualizar`, {

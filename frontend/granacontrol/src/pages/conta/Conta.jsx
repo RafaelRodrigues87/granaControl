@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { ListarConta, CadastrarConta } from "../../service/ContaService";
-import { PlusCircle, Wallet, Trash2 } from "lucide-react";
+import { ListarConta, CadastrarConta, deletarConta } from "../../service/ContaService";
+import { ListarReceitaUsuario } from "../../service/ReceitaService"; // Certifique-se de importar o serviço de receitas
+import { PlusCircle, Wallet, Trash2, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 
 function Conta() {
   const [contas, setContas] = useState([]);
+  const [receitas, setReceitas] = useState([]); // Estado para armazenar todas as receitas
+  const [contaExpandida, setContaExpandida] = useState(null); // Controla qual card mostra as receitas
   const [modalAberto, setModalAberto] = useState(false);
   const [nome, setNome] = useState("");
   const [saldo, setSaldo] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
 
-  
   useEffect(() => {
     document.title = "GranaControl";
     carregarContas();
+    carregarReceitas();
   }, []);
 
   async function carregarContas() {
@@ -25,6 +28,31 @@ function Conta() {
       console.error("Erro ao carregar contas:", error);
     }
   }
+
+  async function carregarReceitas() {
+    try {
+      const data = await ListarReceitaUsuario();
+      setReceitas(data);
+    } catch (error) {
+      console.error("Erro ao carregar receitas:", error);
+    }
+  }
+
+  // Filtra as 3 últimas receitas da conta específica
+ const obterUltimasReceitas = (contaId) => {
+  return receitas
+    .filter(r => {
+      // Acessa o id dentro do objeto conta (r.conta.id)
+      const idDaContaNaReceita = r.conta?.id; 
+      return Number(idDaContaNaReceita) === Number(contaId);
+    })
+    .sort((a, b) => new Date(b.data) - new Date(a.data))
+    .slice(0, 3);
+};
+
+  const toggleExpandir = (id) => {
+    setContaExpandida(contaExpandida === id ? null : id);
+  };
 
   async function handleCadastrar(e) {
     e.preventDefault();
@@ -43,11 +71,22 @@ function Conta() {
     }
   }
 
+  async function handleDeletar(e, contaId) {
+    e.stopPropagation(); // Evita que o clique no botão delete abra as receitas
+    if (!window.confirm("Tem certeza que deseja excluir esta conta?")) return;
+    try {
+      await deletarConta(contaId);
+      carregarContas();
+    } catch (err) {
+      console.error("Erro ao deletar conta:", err);
+    }
+  }
+
   return (
-    <div style={{ backgroundColor: "#f1f4f8", minHeight: "100vh" }}>
+    <div className="d-flex" style={{ backgroundColor: "#f1f4f8", minHeight: "100vh" }}>
       <Sidebar />
 
-      <div style={{ marginLeft: "260px", padding: "40px 32px", minHeight: "100vh", backgroundColor: "#f1f4f8" }}>
+      <div style={{ marginLeft: "260px", flexGrow: 1, padding: "40px 32px" }}>
 
         {/* HEADER */}
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -55,7 +94,7 @@ function Conta() {
             Minhas Contas
           </h1>
           <button
-            className="btn d-flex align-items-center gap-2 fw-bold text-white"
+            className="btn d-flex align-items-center gap-2 fw-bold text-white shadow-sm"
             style={{ background: "linear-gradient(135deg, #6366f1, #4f46e5)", borderRadius: 12, padding: "10px 20px", border: "none" }}
             onClick={() => setModalAberto(true)}
           >
@@ -67,94 +106,133 @@ function Conta() {
         {/* LISTA DE CONTAS */}
         <div className="row g-3">
           {contas.length === 0 ? (
-            <div className="col-12">
-              <div className="card border-0 rounded-4 p-5 text-center" style={{ boxShadow: "0 4px 24px rgba(15,23,42,0.06)" }}>
-                <Wallet size={40} className="mx-auto mb-3 text-muted" />
-                <p className="text-muted fst-italic">Nenhuma conta cadastrada</p>
-              </div>
+            <div className="col-12 text-center py-5">
+              <Wallet size={40} className="mx-auto mb-3 text-muted" />
+              <p className="text-muted">Nenhuma conta cadastrada</p>
             </div>
           ) : (
-            contas.map((conta) => (
-              <div key={conta.id} className="col-12 col-md-6 col-xl-4">
-                <div className="card border-0 rounded-4 p-4" style={{ boxShadow: "0 4px 24px rgba(15,23,42,0.06)" }}>
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <div
-                      className="d-flex align-items-center justify-content-center rounded-3"
-                      style={{ width: 44, height: 44, background: "linear-gradient(135deg, #6366f1, #4f46e5)" }}
-                    >
-                      <Wallet size={20} color="white" />
+            contas.map((conta) => {
+              const ultimasRec = obterUltimasReceitas(conta.id);
+              const isExpandido = contaExpandida === conta.id;
+
+              return (
+                <div key={conta.id} className="col-12 col-md-6 col-xl-4">
+                  <div 
+                    className="card border-0 rounded-4 p-4 shadow-sm" 
+                    onClick={() => toggleExpandir(conta.id)}
+                    style={{ 
+                      cursor: "pointer", 
+                      transition: "all 0.3s ease",
+                      backgroundColor: isExpandido ? "#ffffff" : "#ffffff",
+                      transform: isExpandido ? "scale(1.02)" : "scale(1)"
+                    }}
+                  >
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <div
+                        className="d-flex align-items-center justify-content-center rounded-3 shadow-sm"
+                        style={{ width: 44, height: 44, background: "linear-gradient(135deg, #6366f1, #4f46e5)" }}
+                      >
+                        <Wallet size={20} color="white" />
+                      </div>
+                      <button
+                        onClick={(e) => handleDeletar(e, conta.id)}
+                        className="btn btn-sm d-flex align-items-center justify-content-center border-0"
+                        style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: "#fff1f2", color: "#ef4444" }}
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
+
+                    <p className="fw-bold mb-1" style={{ color: "#1e293b", fontSize: "1rem" }}>{conta.nome}</p>
+                    <h3 className="fw-bold mb-2" style={{ color: "#10b981" }}>
+                      R$ {parseFloat(conta.saldo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </h3>
+                    
+                    <div className="d-flex justify-content-between align-items-center text-muted border-top pt-2">
+                      <span style={{ fontSize: "0.75rem" }}>ID: #{conta.id}</span>
+                      {isExpandido ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </div>
+
+                    {/* SEÇÃO DAS ÚLTIMAS RECEITAS (EXPANSÍVEL) */}
+                    {isExpandido && (
+                      <div className="mt-3 pt-3 border-top animate-fade-in">
+                        <p className="fw-bold text-muted mb-2 small text-uppercase" style={{ letterSpacing: "0.5px" }}>Últimas Entradas</p>
+                        {ultimasRec.length === 0 ? (
+                          <p className="text-muted small mb-0 fst-italic">Sem receitas recentes.</p>
+                        ) : (
+                          ultimasRec.map(rec => (
+                            <div key={rec.id} className="d-flex justify-content-between align-items-center p-2 rounded-3 mb-1" style={{ backgroundColor: "#f8fafc" }}>
+                              <div>
+                                <p className="mb-0 fw-bold small text-dark text-truncate" style={{ maxWidth: "120px" }}>{rec.descricao}</p>
+                                <span className="text-muted" style={{ fontSize: "0.65rem" }}>
+                                  <Calendar size={10} className="me-1" />
+                                  {new Date(rec.data).toLocaleDateString('pt-BR')}
+                                </span>
+                              </div>
+                              <span className="fw-bold small text-success">
+                                + R$ {Number(rec.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <p className="fw-bold mb-1" style={{ color: "#1e293b", fontSize: "1rem" }}>{conta.nome}</p>
-                  <p className="fw-bold mb-0" style={{ color: "#10b981", fontSize: "1.3rem" }}>
-                    R$ {parseFloat(conta.saldo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                  </p>
-                  <p className="text-muted mt-1 mb-0" style={{ fontSize: "0.75rem" }}>ID: #{conta.id}</p>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
 
-      {/* MODAL CADASTRO */}
+      {/* MODAL CADASTRO (Mantido conforme original) */}
       {modalAberto && (
         <div
-          style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}
+          style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1050 }}
           onClick={(e) => e.target === e.currentTarget && setModalAberto(false)}
         >
-          <div className="card border-0 rounded-4 p-4" style={{ width: "100%", maxWidth: 420, boxShadow: "0 25px 60px rgba(0,0,0,0.3)", position: "relative" }}>
-            <button
-              className="btn-close position-absolute"
-              style={{ top: 16, right: 16 }}
-              onClick={() => setModalAberto(false)}
-            />
-
+          <div className="card border-0 rounded-4 p-4 shadow-lg" style={{ width: "100%", maxWidth: 420 }}>
             <h2 className="fw-bold mb-1" style={{ color: "#1e293b", fontSize: "1.4rem" }}>Nova Conta</h2>
-            <p className="text-muted mb-4" style={{ fontSize: "0.9rem" }}>Preencha os dados da sua conta</p>
+            <p className="text-muted mb-4 small">Preencha os dados da sua conta</p>
 
             <form onSubmit={handleCadastrar}>
               <div className="mb-3">
-                <label className="fw-bold text-muted mb-1" style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Nome da conta
-                </label>
+                <label className="fw-bold text-muted mb-1 d-block small text-uppercase">Nome da conta</label>
                 <input
                   type="text"
-                  className="form-control rounded-3"
+                  className="form-control rounded-3 border-0"
                   placeholder="Ex: Nubank, Bradesco..."
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   required
-                  style={{ padding: "12px 16px", border: "2px solid transparent", backgroundColor: "#f1f5f9" }}
+                  style={{ padding: "12px", backgroundColor: "#f1f5f9" }}
                 />
               </div>
 
               <div className="mb-3">
-                <label className="fw-bold text-muted mb-1" style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Saldo inicial
-                </label>
+                <label className="fw-bold text-muted mb-1 d-block small text-uppercase">Saldo inicial</label>
                 <input
                   type="number"
-                  className="form-control rounded-3"
+                  className="form-control rounded-3 border-0"
                   placeholder="0,00"
                   value={saldo}
                   onChange={(e) => setSaldo(e.target.value)}
                   required
                   step="0.01"
-                  style={{ padding: "12px 16px", border: "2px solid transparent", backgroundColor: "#f1f5f9" }}
+                  style={{ padding: "12px", backgroundColor: "#f1f5f9" }}
                 />
               </div>
 
-              {erro && <p className="text-danger fw-bold mb-3" style={{ fontSize: "0.82rem" }}>{erro}</p>}
+              {erro && <p className="text-danger fw-bold mb-3 small">{erro}</p>}
 
-              <button
-                type="submit"
-                className="btn w-100 fw-bold text-white"
-                disabled={loading}
-                style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", padding: "14px", borderRadius: 12, fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "1px" }}
-              >
-                {loading ? "Cadastrando..." : "Cadastrar Conta"}
-              </button>
+              <div className="d-flex gap-2 mt-4">
+                <button type="button" className="btn w-50 fw-bold rounded-3" onClick={() => setModalAberto(false)} style={{ backgroundColor: "#e2e8f0", color: "#475569" }}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn w-50 fw-bold text-white rounded-3 shadow-sm" disabled={loading} style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)" }}>
+                  {loading ? "Salvando..." : "Confirmar"}
+                </button>
+              </div>
             </form>
           </div>
         </div>

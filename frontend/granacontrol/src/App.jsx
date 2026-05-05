@@ -15,7 +15,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro/>}></Route>
 
         
-       <Route path="/conta" elemnt={<PrivateRoute><Conta /></PrivateRoute>}></Route>
+       <Route path="/conta" element={<PrivateRoute><Conta /></PrivateRoute>}></Route>
 
         <Route path="/"  
         element={

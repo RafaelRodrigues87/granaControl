@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'; // ✅ aqui
-import { NavLink, useNavigate } from 'react-router-dom'; // ✅ removeu useState daqui
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   PieChart, 
   ArrowUpCircle, 
   ArrowDownCircle, 
   User, 
-  LogOut 
+  LogOut,
+  Wallet
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 import { buscarSaldoTotal } from "../../service/ContaService";
@@ -22,9 +23,9 @@ const Sidebar = () => {
 
   useEffect(() => {
     buscarSaldoTotal()
-      .then(setSaldoTotal)
+      .then((data) => setSaldoTotal(data))
       .catch(console.error);
-  }, []); // ✅ removeu dependência de "usuario" que não existe aqui
+  }, []);
 
   return (
     <aside className={styles.sidebar}>
@@ -70,15 +71,19 @@ const Sidebar = () => {
         </ul>
       </nav>
 
+      {/* CARD SALDO TOTAL */}
       <div className={styles.metasCard}>
-        <div className={styles.metasHeader}>
-          <span>💰 Poupança</span>
+        <div className={styles.saldoHeader}>
+          <div className={styles.saldoIcone}>
+            <Wallet size={16} />
+          </div>
+          <span className={styles.saldoLabel}>Saldo Total</span>
+        </div>
+        <div className={styles.saldoValor}>
+          R$ {Number(saldoTotal).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
         </div>
         <div className={styles.progressContainer}>
           <div className={styles.progressBar} style={{ width: '64%' }}></div>
-        </div>
-        <div className={styles.metasValues}>
-          <span>R$ {saldoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
       </div>
 

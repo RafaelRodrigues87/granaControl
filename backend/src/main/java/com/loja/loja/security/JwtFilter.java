@@ -33,7 +33,6 @@
 
             String authHeader = request.getHeader("Authorization");
 
-            // Se não tiver token, apenas continua o fluxo
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
@@ -44,13 +43,12 @@
             try {
                 String email = jwtService.extrairEmail(token);
 
-                // Só autentica se ainda não houver usuário no contexto
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                    // Valida o token
-                    if (jwtService.tokenValido(token)) {
+                    // 💥 VALIDAÇÃO CORRETA (token + usuário)
+                    if (jwtService.tokenValido(token, userDetails)) {
 
                         UsernamePasswordAuthenticationToken auth =
                                 new UsernamePasswordAuthenticationToken(
@@ -66,8 +64,7 @@
                 }
 
             } catch (Exception e) {
-                // Aqui você pode logar o erro se quiser
-                // Ex: logger.error("Erro ao validar token", e);
+                e.printStackTrace(); // 👈 importante pra debug agora
             }
 
             filterChain.doFilter(request, response);

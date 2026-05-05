@@ -39,8 +39,5 @@ public class Receita {
     @JoinColumn(name = "conta_id")
     private Conta conta;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
 
 }

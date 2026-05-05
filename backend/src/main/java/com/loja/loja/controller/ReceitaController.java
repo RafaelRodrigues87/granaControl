@@ -5,29 +5,32 @@ import java.util.List;
 import com.loja.loja.entities.Receita;
 import com.loja.loja.entities.Usuario;
 import com.loja.loja.service.ReceitaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("usuarios/receitas")
+    @RequestMapping("usuarios/receitas")
 public class ReceitaController {
 
     private final ReceitaService receitaService;
+    @Autowired
+
 
     public ReceitaController(ReceitaService receitaService){
         this.receitaService = receitaService;
     }
 
-    @PostMapping("/adicionar/{usuarioId}/{contaId}")
+    @PostMapping("/adicionar/{contaId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Receita> criarReceita(
-            @PathVariable Long usuarioId,
+            @AuthenticationPrincipal Usuario usuario,
             @PathVariable Long contaId,
             @RequestBody Receita receita) {
 
-        Receita novaReceita = receitaService.criarReceita(usuarioId, contaId, receita);
+        Receita novaReceita = receitaService.criarReceita(usuario.getId(), contaId, receita);
             return new ResponseEntity<>(novaReceita, HttpStatus.CREATED);
 
     }
@@ -44,16 +47,9 @@ public class ReceitaController {
     //busca pelo id do token
     @GetMapping("/lista/usuario")
     public ResponseEntity<List<Receita>> listarPorUsuario(@AuthenticationPrincipal Usuario usuario) {
-        List<Receita> receitas = receitaService.BuscarPorConta(usuario.getId());
+        List<Receita> receitas = receitaService.BuscarPorUsuario(usuario.getId());
         return ResponseEntity.ok(receitas);
     }
-    //procura e lista as receitas pelo id do usuario
-    @GetMapping("/lista/usuario/{usuarioid}")
-    public ResponseEntity<List<Receita>> ListarPorUsuarioId(@PathVariable Long UsuarioId){
-        List<Receita> receitas = receitaService.BuscarPorConta(UsuarioId);
-        return ResponseEntity.ok(receitas);
-    }
-
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<Receita> atualizarReceita(@PathVariable Long id, @RequestBody Receita receitaAtualizado){
         // O serviço já deve cuidar de buscar, validar e salvar
@@ -64,9 +60,8 @@ public class ReceitaController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public List<Receita> deletarReceita(@PathVariable Long id,
-                                        @RequestBody Long UsuarioId){
+    public ResponseEntity<Void> deletarReceita(@PathVariable Long id){
         receitaService.deletarReceita(id);
-        return  receitaService.BuscarPorConta(UsuarioId);
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
 }
