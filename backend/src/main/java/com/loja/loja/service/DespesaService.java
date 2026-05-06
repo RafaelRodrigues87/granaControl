@@ -31,7 +31,7 @@ public class DespesaService {
 
 
 
-    public Despesa criarDespesa(Long categoria_id, Long conta_id,
+    public Despesa criarDespesa( Long conta_id,
                                 Long usuario_id, Despesa despesa){
 
         // buscar conta
@@ -48,8 +48,7 @@ public class DespesaService {
                 .orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
 
         // buscar categoria
-        Categoria categoria = categoriaRepository.findById(categoria_id)
-                .orElseThrow(() -> new RuntimeException("Categoria nao encontrada"));
+
 
         // validação básica
         if (despesa.getValor() == null) {
@@ -59,7 +58,7 @@ public class DespesaService {
         // setar relacionamentos
         despesa.setUsuario(usuario);
         despesa.setConta(conta);
-        despesa.setCategoria(categoria);
+
 
         // saldo
         if (conta.getSaldo() == null) {

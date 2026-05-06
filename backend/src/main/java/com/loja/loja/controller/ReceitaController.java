@@ -60,8 +60,12 @@ public class ReceitaController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarReceita(@PathVariable Long id){
+    public ResponseEntity<List<Receita>> deletarReceita(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Usuario usuario) {
+
         receitaService.deletarReceita(id);
-        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+        List<Receita> receitas = receitaService.BuscarPorUsuario(usuario.getId());
+        return ResponseEntity.ok(receitas); // ✅ retorna a lista atualizada
     }
 }

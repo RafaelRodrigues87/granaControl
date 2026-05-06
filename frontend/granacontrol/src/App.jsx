@@ -6,6 +6,7 @@ import Home from './pages/home/Home'
 import PrivateRoute from './privateRoute/PrivateRoute'
 import Receita from './pages/receitas/Receitas'
 import Conta from './pages/conta/Conta'
+import Despesas from './pages/Despesas/Despesas'
 function App() {
   return (
   
@@ -16,6 +17,7 @@ function App() {
 
         
        <Route path="/conta" element={<PrivateRoute><Conta /></PrivateRoute>}></Route>
+        <Route path="/despesas" element={<PrivateRoute><Despesas /></PrivateRoute>}></Route>
 
         <Route path="/"  
         element={

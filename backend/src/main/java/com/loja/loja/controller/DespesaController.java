@@ -1,11 +1,11 @@
 package com.loja.loja.controller;
 
-
 import com.loja.loja.entities.Despesa;
-import com.loja.loja.entities.Receita;
+import com.loja.loja.entities.Usuario;
 import com.loja.loja.service.DespesaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,44 +16,40 @@ public class DespesaController {
 
     private final DespesaService despesaService;
 
-    public DespesaController(DespesaService despesaService){
-         this.despesaService = despesaService;
+    public DespesaController(DespesaService despesaService) {
+        this.despesaService = despesaService;
     }
 
-    @PostMapping("/criar/{usuarioId}/{categoriaId}/{contaId}")
+    @PostMapping("/criar/{contaId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Despesa> criarDespesa(
-            @PathVariable("usuarioId") Long usuarioId,
-            @PathVariable("categoriaId") Long categoriaId,
+            @AuthenticationPrincipal Usuario usuario,
             @PathVariable("contaId") Long contaId,
-            @RequestBody Despesa despesa){
-
-        Despesa novaDespesa = despesaService
-                .criarDespesa(categoriaId, contaId, usuarioId, despesa);
-
+            @RequestBody Despesa despesa) {
+        Despesa novaDespesa = despesaService.criarDespesa(contaId, usuario.getId(), despesa);
         return new ResponseEntity<>(novaDespesa, HttpStatus.CREATED);
     }
 
-    @GetMapping("/listar/receitas/{usuarioId}")
-    public ResponseEntity<List<Despesa>> listarDepesas(@PathVariable Long usuarioId){
-        List<Despesa> despesas = despesaService.listarDespesasPorUsuario(usuarioId);
+    @GetMapping("/listar")  // ✅ era /listar/receitas
+    public ResponseEntity<List<Despesa>> listarDespesas(@AuthenticationPrincipal Usuario usuario) {
+        List<Despesa> despesas = despesaService.listarDespesasPorUsuario(usuario.getId());
         return ResponseEntity.ok(despesas);
-
     }
 
     @PutMapping("/atualizar/{id}")
-    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id, @RequestBody Despesa despesaAtualizada){
-
+    public ResponseEntity<Despesa> atualizarDespesa(
+            @PathVariable Long id,
+            @RequestBody Despesa despesaAtualizada) {
         Despesa despesa = despesaService.atualizarDespesa(id, despesaAtualizada);
         return ResponseEntity.ok(despesa);
     }
 
     @DeleteMapping("/deletar/{id}")
-    public void deletarDespesa(@PathVariable Long id){
-
+    public ResponseEntity<List<Despesa>> deletarDespesa(  // ✅ era List<Receita>
+                                                          @PathVariable Long id,
+                                                          @AuthenticationPrincipal Usuario usuario) {
         despesaService.deletarDespesa(id);
-
+        List<Despesa> despesas = despesaService.listarDespesasPorUsuario(usuario.getId());
+        return ResponseEntity.ok(despesas);
     }
-
 }
-
