@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import { AdicionarReceita, deletarReceita, ListarReceitaUsuario } from "../../service/ReceitaService";
+import { AdicionarReceita, deletarReceita, ListarReceitaUsuario, atualizarReceita } from "../../service/ReceitaService";
 import { ListarConta } from "../../service/ContaService";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { PlusCircle, Wallet, Trash2, Calendar, Hash, ArrowUpCircle } from "lucide-react";
+import { PlusCircle, Wallet, Trash2, Calendar, Hash, ArrowUpCircle, Pencil } from "lucide-react";
 
 function Receitas() {
   const [receitas, setReceitas] = useState([]);
   const [contas, setContas] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [novaReceita, setNovaReceita] = useState({
-    valor: "",
-    data: "",
-    descricao: "",
-    contaId: ""
-  });
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [receitaEditando, setReceitaEditando] = useState(null);
+  const [novaReceita, setNovaReceita] = useState({ valor: "", data: "", descricao: "", contaId: "" });
+  const [formEdicao, setFormEdicao] = useState({ valor: "", data: "", descricao: "" });
 
   useEffect(() => {
     document.title = "GranaControl - Receitas";
@@ -24,8 +22,7 @@ function Receitas() {
   const carregarReceitas = async () => {
     try {
       const data = await ListarReceitaUsuario();
-      const ordenadas = data.sort((a, b) => new Date(b.data) - new Date(a.data));
-      setReceitas(ordenadas);
+      setReceitas(data.sort((a, b) => new Date(b.data) - new Date(a.data)));
     } catch (error) {
       console.error("Erro ao carregar receitas:", error);
     }
@@ -42,16 +39,38 @@ function Receitas() {
     }
   }
 
+  function handleAbrirEdicao(e, rec) {
+    e.stopPropagation();
+    setReceitaEditando(rec);
+    setFormEdicao({
+      valor: rec.valor,
+      data: rec.data,
+      descricao: rec.descricao
+    });
+    setShowEditModal(true);
+  }
+
+  async function handleAtualizar(e) {
+    e.preventDefault();
+    try {
+      await atualizarReceita(receitaEditando.id, formEdicao);
+      setShowEditModal(false);
+      setReceitaEditando(null);
+      carregarReceitas();
+    } catch (err) {
+      console.error("Erro ao atualizar receita:", err);
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dadosParaEnviar = {
+      await AdicionarReceita(novaReceita.contaId, {
         valor: Number(novaReceita.valor),
         data: novaReceita.data,
         descricao: novaReceita.descricao,
         conta: { id: Number(novaReceita.contaId) }
-      };
-      await AdicionarReceita(novaReceita.contaId, dadosParaEnviar);
+      });
       setShowModal(false);
       setNovaReceita({ valor: "", data: "", descricao: "", contaId: "" });
       carregarReceitas();
@@ -94,7 +113,7 @@ function Receitas() {
           ) : (
             receitas.map((rec) => (
               <div key={rec.id} className="col-12 col-md-6 col-xxl-4">
-                <div className="card border-0 rounded-4 p-4 shadow-sm h-100" style={{ backgroundColor: "#ffffff", transition: "transform 0.2s" }}>
+                <div className="card border-0 rounded-4 p-4 shadow-sm h-100" style={{ backgroundColor: "#ffffff" }}>
 
                   {/* TOPO DO CARD */}
                   <div className="d-flex justify-content-between align-items-start mb-4">
@@ -104,13 +123,24 @@ function Receitas() {
                     >
                       <Wallet size={24} color="#10b981" />
                     </div>
-                    <button
-                      onClick={(e) => handleDeletar(e, rec.id)}
-                      className="btn btn-sm d-flex align-items-center justify-content-center border-0"
-                      style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: "#fff1f2", color: "#e11d48" }}
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    <div className="d-flex gap-2">
+                      {/* BOTÃO EDITAR */}
+                      <button
+                        onClick={(e) => handleAbrirEdicao(e, rec)}
+                        className="btn btn-sm d-flex align-items-center justify-content-center border-0"
+                        style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: "#eff6ff", color: "#3b82f6" }}
+                      >
+                        <Pencil size={15} />
+                      </button>
+                      {/* BOTÃO DELETAR */}
+                      <button
+                        onClick={(e) => handleDeletar(e, rec.id)}
+                        className="btn btn-sm d-flex align-items-center justify-content-center border-0"
+                        style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: "#fff1f2", color: "#e11d48" }}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* INFO PRINCIPAL */}
@@ -131,7 +161,7 @@ function Receitas() {
                     </h3>
                   </div>
 
-                  {/* RODAPÉ DO CARD */}
+                  {/* RODAPÉ */}
                   <div className="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
                     <div className="d-flex align-items-center gap-2 text-muted small">
                       <Calendar size={14} />
@@ -150,7 +180,7 @@ function Receitas() {
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* MODAL CADASTRO */}
       {showModal && (
         <div
           style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1050 }}
@@ -161,71 +191,80 @@ function Receitas() {
               <h2 className="fw-bold mb-0" style={{ color: "#1e293b", fontSize: "1.5rem" }}>Nova Receita</h2>
               <button className="btn-close shadow-none" onClick={() => setShowModal(false)}></button>
             </div>
-
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Descrição do Ganho</label>
-                <input
-                  type="text"
-                  className="form-control rounded-3 border-0"
-                  placeholder="Ex: Salário Mensal"
-                  value={novaReceita.descricao}
-                  onChange={(e) => setNovaReceita({ ...novaReceita, descricao: e.target.value })}
-                  required
-                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                />
+                <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Descrição</label>
+                <input type="text" className="form-control rounded-3 border-0" placeholder="Ex: Salário Mensal"
+                  value={novaReceita.descricao} onChange={(e) => setNovaReceita({ ...novaReceita, descricao: e.target.value })}
+                  required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
               </div>
-
               <div className="row g-3 mb-3">
                 <div className="col-6">
                   <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Valor (R$)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    className="form-control rounded-3 border-0"
-                    placeholder="0,00"
-                    value={novaReceita.valor}
-                    onChange={(e) => setNovaReceita({ ...novaReceita, valor: e.target.value })}
-                    required
-                    style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                  />
+                  <input type="number" step="0.01" className="form-control rounded-3 border-0" placeholder="0,00"
+                    value={novaReceita.valor} onChange={(e) => setNovaReceita({ ...novaReceita, valor: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
                 </div>
                 <div className="col-6">
                   <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Data</label>
-                  <input
-                    type="date"
-                    className="form-control rounded-3 border-0"
-                    value={novaReceita.data}
-                    onChange={(e) => setNovaReceita({ ...novaReceita, data: e.target.value })}
-                    required
-                    style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                  />
+                  <input type="date" className="form-control rounded-3 border-0"
+                    value={novaReceita.data} onChange={(e) => setNovaReceita({ ...novaReceita, data: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
                 </div>
               </div>
-
               <div className="mb-4">
                 <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Vincular à Conta</label>
-                <select
-                  className="form-select rounded-3 border-0"
-                  value={novaReceita.contaId}
+                <select className="form-select rounded-3 border-0" value={novaReceita.contaId}
                   onChange={(e) => setNovaReceita({ ...novaReceita, contaId: e.target.value })}
-                  required
-                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                >
+                  required style={{ padding: "14px", backgroundColor: "#f1f5f9" }}>
                   <option value="">Selecione uma conta</option>
-                  {contas.map(c => (
-                    <option key={c.id} value={c.id}>{c.nome}</option>
-                  ))}
+                  {contas.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                 </select>
               </div>
+              <div className="d-flex gap-3">
+                <button type="button" className="btn w-100 fw-bold rounded-3 py-3" onClick={() => setShowModal(false)} style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none" }}>Cancelar</button>
+                <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-3" style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", border: "none" }}>Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
-              <div className="d-flex gap-3 mt-2">
-                <button type="button" className="btn w-100 fw-bold rounded-3 py-3" onClick={() => setShowModal(false)} style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none" }}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-3 shadow-sm" style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", border: "none" }}>
-                  Salvar Receita
-                </button>
+      {/* MODAL EDIÇÃO */}
+      {showEditModal && receitaEditando && (
+        <div
+          style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1050 }}
+          onClick={(e) => e.target === e.currentTarget && setShowEditModal(false)}
+        >
+          <div className="card border-0 rounded-4 p-4 shadow-lg" style={{ width: "95%", maxWidth: 480, backgroundColor: "#fff" }}>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h2 className="fw-bold mb-0" style={{ color: "#1e293b", fontSize: "1.5rem" }}>Editar Receita</h2>
+              <button className="btn-close shadow-none" onClick={() => setShowEditModal(false)}></button>
+            </div>
+            <form onSubmit={handleAtualizar}>
+              <div className="mb-3">
+                <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Descrição</label>
+                <input type="text" className="form-control rounded-3 border-0" value={formEdicao.descricao}
+                  onChange={(e) => setFormEdicao({ ...formEdicao, descricao: e.target.value })}
+                  required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
+              </div>
+              <div className="row g-3 mb-4">
+                <div className="col-6">
+                  <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Valor (R$)</label>
+                  <input type="number" step="0.01" className="form-control rounded-3 border-0" value={formEdicao.valor}
+                    onChange={(e) => setFormEdicao({ ...formEdicao, valor: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
+                </div>
+                <div className="col-6">
+                  <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Data</label>
+                  <input type="date" className="form-control rounded-3 border-0" value={formEdicao.data}
+                    onChange={(e) => setFormEdicao({ ...formEdicao, data: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
+                </div>
+              </div>
+              <div className="d-flex gap-3">
+                <button type="button" className="btn w-100 fw-bold rounded-3 py-3" onClick={() => setShowEditModal(false)} style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none" }}>Cancelar</button>
+                <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-3" style={{ background: "linear-gradient(135deg, #10b981, #059669)", border: "none" }}>Salvar</button>
               </div>
             </form>
           </div>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DespesaService {
@@ -65,8 +66,11 @@ public class DespesaService {
             conta.setSaldo(BigDecimal.ZERO);
         }
 
-        BigDecimal novoSaldo = conta.getSaldo().subtract(despesa.getValor());
-        conta.setSaldo(novoSaldo);
+        if ("PAGO".equalsIgnoreCase(despesa.getStatus())) {
+            BigDecimal novoSaldo = conta.getSaldo().subtract(despesa.getValor());
+            conta.setSaldo(novoSaldo);
+            contaRepository.save(conta);
+        }
 
         // salvar conta
         contaRepository.save(conta);
@@ -94,53 +98,63 @@ public class DespesaService {
 
 
         //atualizar campos
-        public Despesa atualizarDespesa(Long id, Despesa novaDespesa){
+        public Despesa atualizarDespesa(Long id, Despesa despesaAtualizada) {
+
             Despesa despesa = despesaRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Despesa nao encontrada"));
+                    .orElseThrow(() -> new RuntimeException("Despesa não encontrada"));
 
-            // data
-            if (novaDespesa.getData() != null &&
-                    !novaDespesa.getData().equals(despesa.getData())) {
-                despesa.setData(novaDespesa.getData());
+            // Guarda status antigo
+            String statusAntigo = despesa.getStatus();
+
+            Optional.ofNullable(despesaAtualizada.getValor())
+                    .ifPresent(despesa::setValor);
+
+            Optional.ofNullable(despesaAtualizada.getData())
+                    .ifPresent(despesa::setData);
+
+            Optional.ofNullable(despesaAtualizada.getDescricao())
+                    .ifPresent(despesa::setDescricao);
+
+            Optional.ofNullable(despesaAtualizada.getStatus())
+                    .ifPresent(despesa::setStatus);
+
+            Conta conta = despesa.getConta();
+
+            // PENDENTE -> PAGO
+            if ("Pendente".equalsIgnoreCase(statusAntigo)
+                    && "Pago".equalsIgnoreCase(despesa.getStatus())) {
+
+                conta.setSaldo(
+                        conta.getSaldo().subtract(despesa.getValor())
+                );
             }
 
-            // status
-            if (novaDespesa.getStatus() != null &&
-                    !novaDespesa.getStatus().equals(despesa.getStatus())) {
-                despesa.setStatus(novaDespesa.getStatus());
-            }
+            // PAGO -> PENDENTE
+            if ("Pago".equalsIgnoreCase(statusAntigo)
+                    && "Pendente".equalsIgnoreCase(despesa.getStatus())) {
 
-            // valor
-            if (novaDespesa.getValor() != null &&
-                    novaDespesa.getValor().compareTo(despesa.getValor()) != 0) {
-                despesa.setValor(novaDespesa.getValor());
-            }
-
-            // descricao
-            if (novaDespesa.getDescricao() != null &&
-                    !novaDespesa.getDescricao().equals(despesa.getDescricao())) {
-                despesa.setDescricao(novaDespesa.getDescricao());
+                conta.setSaldo(
+                        conta.getSaldo().add(despesa.getValor())
+                );
             }
 
             return despesaRepository.save(despesa);
         }
 
 
-
-
-
     @Transactional
-    public void deletarDespesa(Long id){
+    public void deletarDespesa(Long id) {
         Despesa despesa = despesaRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Despesa nao encontrada"));
+                .orElseThrow(() -> new RuntimeException("Despesa nao encontrada"));
 
-        Conta conta = despesa.getConta();
+        // só devolve o saldo se estava PAGO
+        if ("PAGO".equalsIgnoreCase(despesa.getStatus())) {
+            Conta conta = despesa.getConta();
+            conta.setSaldo(conta.getSaldo().add(despesa.getValor()));
+            contaRepository.save(conta);
+        }
 
-        conta.setSaldo(conta.getSaldo().add(despesa.getValor()));
-
-        contaRepository.save(conta);
         despesaRepository.delete(despesa);
-
     }
 
 

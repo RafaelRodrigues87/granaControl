@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
-  PieChart, 
   ArrowUpCircle, 
   ArrowDownCircle, 
-  User, 
+  UserCircle,
   LogOut,
-  Wallet
+  Wallet,
+  CreditCard
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 import { buscarSaldoTotal } from "../../service/ContaService";
@@ -45,15 +45,9 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/resumo" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-              <PieChart size={20} />
-              Resumo
-            </NavLink>
-          </li>
-          <li>
             <NavLink to="/receita" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               <ArrowUpCircle size={20} />
-              Receita
+              Receitas
             </NavLink>
           </li>
           <li>
@@ -64,8 +58,14 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink to="/conta" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-              <User size={20} />
-              Conta
+              <CreditCard size={20} /> {/* ✅ novo ícone de conta */}
+              Contas
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/perfil" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
+              <UserCircle size={20} /> {/* ✅ perfil */}
+              Perfil
             </NavLink>
           </li>
         </ul>

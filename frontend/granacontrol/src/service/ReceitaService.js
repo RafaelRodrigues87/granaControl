@@ -93,3 +93,25 @@ export async function deletarReceita(id){
         throw err;
     }
 }
+
+ export async function atualizarReceita(id, dados){
+        const token = localStorage.getItem("token");
+        try{
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/receitas/atualizar/${id}`, {
+                method: 'PUT',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${  token}`
+                },
+                body: JSON.stringify(dados)
+            });
+            const resultado = await response.json();
+            
+            if(!response.ok) throw new Error(resultado.error || "erro ao atualizar  Receita");
+            return resultado;
+
+        } catch(err){
+            throw err;
+        }
+    }
+

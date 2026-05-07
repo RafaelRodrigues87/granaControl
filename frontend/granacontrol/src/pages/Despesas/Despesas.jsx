@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { AdicionarDespesa, ListarDespesaUsuario, deletarDespesa } from "../../service/DespesasService";
+import { AdicionarDespesa, ListarDespesaUsuario, deletarDespesa, atualizarDespesa } from "../../service/DespesasService";
 import { ListarConta } from "../../service/ContaService";
-import { PlusCircle, Trash2, Calendar, Hash, ArrowDownCircle, CheckCircle, Clock } from "lucide-react";
+import { PlusCircle, Trash2, Calendar, Hash, ArrowDownCircle, CheckCircle, Clock, Pencil } from "lucide-react";
 
 function Despesas() {
   const [despesas, setDespesas] = useState([]);
   const [contas, setContas] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [novaDespesa, setNovaDespesa] = useState({
-    valor: "",
-    data: "",
-    descricao: "",
-    status: "PENDENTE",
-    contaId: ""
-  });
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [despesaEditando, setDespesaEditando] = useState(null);
+  const [novaDespesa, setNovaDespesa] = useState({ valor: "", data: "", descricao: "", status: "PENDENTE", contaId: "" });
+  const [formEdicao, setFormEdicao] = useState({ valor: "", data: "", descricao: "", status: "" });
 
   useEffect(() => {
     document.title = "GranaControl - Despesas";
@@ -25,8 +22,7 @@ function Despesas() {
   const carregarDespesas = async () => {
     try {
       const data = await ListarDespesaUsuario();
-      const ordenadas = data.sort((a, b) => new Date(b.data) - new Date(a.data));
-      setDespesas(ordenadas);
+      setDespesas(data.sort((a, b) => new Date(b.data) - new Date(a.data)));
     } catch (error) {
       console.error("Erro ao carregar despesas:", error);
     }
@@ -43,17 +39,40 @@ function Despesas() {
     }
   }
 
+  function handleAbrirEdicao(e, desp) {
+    e.stopPropagation();
+    setDespesaEditando(desp);
+    setFormEdicao({
+      valor: desp.valor,
+      data: desp.data,
+      descricao: desp.descricao,
+      status: desp.status
+    });
+    setShowEditModal(true);
+  }
+
+  async function handleAtualizar(e) {
+    e.preventDefault();
+    try {
+      await atualizarDespesa(despesaEditando.id, formEdicao);
+      setShowEditModal(false);
+      setDespesaEditando(null);
+      carregarDespesas();
+    } catch (err) {
+      console.error("Erro ao atualizar despesa:", err);
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dadosParaEnviar = {
+      await AdicionarDespesa(novaDespesa.contaId, {
         valor: Number(novaDespesa.valor),
         data: novaDespesa.data,
         descricao: novaDespesa.descricao,
         status: novaDespesa.status,
         conta: { id: Number(novaDespesa.contaId) }
-      };
-      await AdicionarDespesa(novaDespesa.contaId, dadosParaEnviar);
+      });
       setShowModal(false);
       setNovaDespesa({ valor: "", data: "", descricao: "", status: "PENDENTE", contaId: "" });
       carregarDespesas();
@@ -119,13 +138,24 @@ function Despesas() {
                       >
                         <ArrowDownCircle size={24} color="#ef4444" />
                       </div>
-                      <button
-                        onClick={(e) => handleDeletar(e, desp.id)}
-                        className="btn btn-sm d-flex align-items-center justify-content-center border-0"
-                        style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: "#fff1f2", color: "#e11d48" }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="d-flex gap-2">
+                        {/* BOTÃO EDITAR */}
+                        <button
+                          onClick={(e) => handleAbrirEdicao(e, desp)}
+                          className="btn btn-sm d-flex align-items-center justify-content-center border-0"
+                          style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: "#eff6ff", color: "#3b82f6" }}
+                        >
+                          <Pencil size={15} />
+                        </button>
+                        {/* BOTÃO DELETAR */}
+                        <button
+                          onClick={(e) => handleDeletar(e, desp.id)}
+                          className="btn btn-sm d-flex align-items-center justify-content-center border-0"
+                          style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: "#fff1f2", color: "#e11d48" }}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
                     </div>
 
                     {/* INFO PRINCIPAL */}
@@ -134,10 +164,8 @@ function Despesas() {
                         {desp.descricao}
                       </h5>
                       <div className="d-flex align-items-center gap-2">
-                        <span
-                          className="badge d-flex align-items-center gap-1"
-                          style={{ backgroundColor: statusStyle.bg, color: statusStyle.color, fontWeight: 500, padding: "6px 10px" }}
-                        >
+                        <span className="badge d-flex align-items-center gap-1"
+                          style={{ backgroundColor: statusStyle.bg, color: statusStyle.color, fontWeight: 500, padding: "6px 10px" }}>
                           {statusStyle.icon}
                           {statusStyle.label}
                         </span>
@@ -175,7 +203,7 @@ function Despesas() {
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* MODAL CADASTRO */}
       {showModal && (
         <div
           style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1050 }}
@@ -186,84 +214,98 @@ function Despesas() {
               <h2 className="fw-bold mb-0" style={{ color: "#1e293b", fontSize: "1.5rem" }}>Nova Despesa</h2>
               <button className="btn-close shadow-none" onClick={() => setShowModal(false)}></button>
             </div>
-
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Descrição</label>
-                <input
-                  type="text"
-                  className="form-control rounded-3 border-0"
-                  placeholder="Ex: Conta de luz"
-                  value={novaDespesa.descricao}
-                  onChange={(e) => setNovaDespesa({ ...novaDespesa, descricao: e.target.value })}
-                  required
-                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                />
+                <input type="text" className="form-control rounded-3 border-0" placeholder="Ex: Conta de luz"
+                  value={novaDespesa.descricao} onChange={(e) => setNovaDespesa({ ...novaDespesa, descricao: e.target.value })}
+                  required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
               </div>
-
               <div className="row g-3 mb-3">
                 <div className="col-6">
                   <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Valor (R$)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    className="form-control rounded-3 border-0"
-                    placeholder="0,00"
-                    value={novaDespesa.valor}
-                    onChange={(e) => setNovaDespesa({ ...novaDespesa, valor: e.target.value })}
-                    required
-                    style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                  />
+                  <input type="number" step="0.01" className="form-control rounded-3 border-0" placeholder="0,00"
+                    value={novaDespesa.valor} onChange={(e) => setNovaDespesa({ ...novaDespesa, valor: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
                 </div>
                 <div className="col-6">
                   <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Data</label>
-                  <input
-                    type="date"
-                    className="form-control rounded-3 border-0"
-                    value={novaDespesa.data}
-                    onChange={(e) => setNovaDespesa({ ...novaDespesa, data: e.target.value })}
-                    required
-                    style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                  />
+                  <input type="date" className="form-control rounded-3 border-0"
+                    value={novaDespesa.data} onChange={(e) => setNovaDespesa({ ...novaDespesa, data: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
                 </div>
               </div>
-
               <div className="mb-3">
                 <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Status</label>
-                <select
-                  className="form-select rounded-3 border-0"
-                  value={novaDespesa.status}
+                <select className="form-select rounded-3 border-0" value={novaDespesa.status}
                   onChange={(e) => setNovaDespesa({ ...novaDespesa, status: e.target.value })}
-                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                >
+                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}>
                   <option value="PENDENTE">Pendente</option>
                   <option value="PAGO">Pago</option>
                 </select>
               </div>
-
               <div className="mb-4">
                 <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Vincular à Conta</label>
-                <select
-                  className="form-select rounded-3 border-0"
-                  value={novaDespesa.contaId}
+                <select className="form-select rounded-3 border-0" value={novaDespesa.contaId}
                   onChange={(e) => setNovaDespesa({ ...novaDespesa, contaId: e.target.value })}
-                  required
-                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}
-                >
+                  required style={{ padding: "14px", backgroundColor: "#f1f5f9" }}>
                   <option value="">Selecione uma conta</option>
-                  {contas.map(c => (
-                    <option key={c.id} value={c.id}>{c.nome}</option>
-                  ))}
+                  {contas.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                 </select>
               </div>
+              <div className="d-flex gap-3">
+                <button type="button" className="btn w-100 fw-bold rounded-3 py-3" onClick={() => setShowModal(false)} style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none" }}>Cancelar</button>
+                <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-3" style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", border: "none" }}>Salvar Despesa</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
-              <div className="d-flex gap-3 mt-2">
-                <button type="button" className="btn w-100 fw-bold rounded-3 py-3" onClick={() => setShowModal(false)} style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none" }}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-3 shadow-sm" style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", border: "none" }}>
-                  Salvar Despesa
-                </button>
+      {/* MODAL EDIÇÃO */}
+      {showEditModal && despesaEditando && (
+        <div
+          style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1050 }}
+          onClick={(e) => e.target === e.currentTarget && setShowEditModal(false)}
+        >
+          <div className="card border-0 rounded-4 p-4 shadow-lg" style={{ width: "95%", maxWidth: 480, backgroundColor: "#fff" }}>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h2 className="fw-bold mb-0" style={{ color: "#1e293b", fontSize: "1.5rem" }}>Editar Despesa</h2>
+              <button className="btn-close shadow-none" onClick={() => setShowEditModal(false)}></button>
+            </div>
+            <form onSubmit={handleAtualizar}>
+              <div className="mb-3">
+                <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Descrição</label>
+                <input type="text" className="form-control rounded-3 border-0" value={formEdicao.descricao}
+                  onChange={(e) => setFormEdicao({ ...formEdicao, descricao: e.target.value })}
+                  required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
+              </div>
+              <div className="row g-3 mb-3">
+                <div className="col-6">
+                  <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Valor (R$)</label>
+                  <input type="number" step="0.01" className="form-control rounded-3 border-0" value={formEdicao.valor}
+                    onChange={(e) => setFormEdicao({ ...formEdicao, valor: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
+                </div>
+                <div className="col-6">
+                  <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Data</label>
+                  <input type="date" className="form-control rounded-3 border-0" value={formEdicao.data}
+                    onChange={(e) => setFormEdicao({ ...formEdicao, data: e.target.value })}
+                    required style={{ padding: "14px", backgroundColor: "#f1f5f9" }} />
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="fw-bold text-muted mb-2 d-block small text-uppercase">Status</label>
+                <select className="form-select rounded-3 border-0" value={formEdicao.status}
+                  onChange={(e) => setFormEdicao({ ...formEdicao, status: e.target.value })}
+                  style={{ padding: "14px", backgroundColor: "#f1f5f9" }}>
+                  <option value="PENDENTE">Pendente</option>
+                  <option value="PAGO">Pago</option>
+                </select>
+              </div>
+              <div className="d-flex gap-3">
+                <button type="button" className="btn w-100 fw-bold rounded-3 py-3" onClick={() => setShowEditModal(false)} style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none" }}>Cancelar</button>
+                <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-3" style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", border: "none" }}>Salvar</button>
               </div>
             </form>
           </div>
@@ -273,4 +315,4 @@ function Despesas() {
   );
 }
 
-export default Despesas;
+export default Despesas;        
