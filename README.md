@@ -54,70 +54,41 @@ O **GranaControl** é uma aplicação web de controle financeiro pessoal que per
 | Vite | - |
 
 ---
-
 ## 🚀 Como Rodar
 
 ### Pré-requisitos
-
 - [Docker](https://www.docker.com/) e Docker Compose instalados
 - [Node.js](https://nodejs.org/) 18+ instalado
 - Conta Gmail com [senha de app](https://myaccount.google.com/security) gerada
 
 ### 1. Clone o repositório
-
 ```bash
 git clone https://github.com/seuusuario/granacontrol.git
 cd granacontrol
 ```
 
-### 2. Configure as variáveis de ambiente do backend
-
-Crie um arquivo `.env` na raiz do projeto ou edite diretamente o `docker-compose.yml`:
-
-```env
-JWT_SECRET=SuaChaveSecretaAqui
-SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/mydb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-SPRING_DATASOURCE_USERNAME=root
-SPRING_DATASOURCE_PASSWORD=123
-MAIL_USERNAME=seuemail@gmail.com
-MAIL_PASSWORD=suasenhadaapp
-```
-
-### 3. Suba o backend e banco com Docker
-
+### 2. Suba o backend e banco com Docker
 ```bash
+cd backend
 docker-compose up -d
 ```
 
-Aguarde os containers subirem. Verifique com:
-
-```bash
-docker ps
-```
-
-Você verá dois containers rodando:
-- `mysql-loja` na porta `3306`
-- `backend-loja` na porta `8080`
-
-### 4. Configure o frontend
-
-Crie o arquivo `.env` dentro da pasta `frontend/granacontrol`:
-
+### 3. Configure o frontend
+Crie o arquivo `.env` dentro de `frontend/granacontrol`:
 ```env
 VITE_API_URL=http://localhost:8080
 ```
 
-### 5. Instale as dependências e rode o frontend
-
+### 4. Rode o frontend
 ```bash
 cd frontend/granacontrol
 npm install
 npm run dev
 ```
 
-O frontend estará disponível em: **http://localhost:5173**
+Frontend disponível em: **http://localhost:5173**
+Backend disponível em: **http://localhost:8080**
 
----
 
 ## 🐳 Containers Docker
 
@@ -149,7 +120,26 @@ docker-compose up -d --build
 
 ## 📁 Estrutura do Projeto
 
-
+granacontrol/
+├── backend/
+│   ├── src/
+│   │   └── main/java/com/loja/loja/
+│   │       ├── controller/
+│   │       ├── entities/
+│   │       ├── repository/
+│   │       ├── service/
+│   │       └── security/
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   └── pom.xml
+│
+└── frontend/
+    └── granacontrol/
+        ├── src/
+        │   ├── components/
+        │   ├── pages/
+        │   └── service/
+        └── package.json
 ---
 
 ## 🔌 Endpoints da API
