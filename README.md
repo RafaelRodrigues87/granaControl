@@ -1,100 +1,150 @@
-GranaControl 💰
+<div align="center">
 
-Sistema de controle financeiro desenvolvido com foco em gerenciamento de receitas, despesas e contas bancárias, oferecendo uma experiência moderna e organizada para acompanhamento financeiro pessoal.
+# 💰 GranaControl
 
-📌 Sobre o Projeto
+### Sistema de controle financeiro pessoal
 
-O GranaControl foi criado com o objetivo de praticar e consolidar conhecimentos em desenvolvimento backend, construção de APIs REST e integração com frontend moderno.
+![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.5-6DB33F?style=for-the-badge&logo=springboot)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker)
 
-A aplicação permite que usuários gerenciem suas movimentações financeiras de forma prática, mantendo controle sobre:
+</div>
 
-receitas
-despesas
-contas bancárias
-saldo total
-histórico de movimentações
+---
 
-O projeto também possui autenticação segura e controle de acesso utilizando JWT.
+## 📋 Sobre o Projeto
 
-🚀 Funcionalidades
-👤 Usuários
-Cadastro de usuários
-Login autenticado
-Proteção de rotas
-Controle de sessão
-💵 Receitas
-Cadastro de receitas
-Atualização de receitas
-Exclusão de receitas
+O **GranaControl** é uma aplicação web de controle financeiro pessoal que permite gerenciar contas bancárias, receitas e despesas de forma simples e visual. Com dashboard interativo, gráficos de movimentações e metas de saldo personalizáveis.
 
-💸 Despesas
-Cadastro de despesas
-Atualização de despesas
-Exclusão de despesas
-Controle entre despesas pagas e pendentes
-🏦 Contas
-Cadastro de contas bancárias
-Controle de saldo automático
-Identificação da conta com maior saldo
-📊 Dashboard
-Últimas movimentações
-Saldo total
-Conta principal
-Gráfico financeiro
-Resumo financeiro do usuário
-🧠 Regras de Negócio
+---
 
-O sistema possui regras implementadas para manter a integridade financeira dos dados:
+## ✨ Funcionalidades
 
-Atualização automática do saldo das contas
-Controle de despesas pagas e pendentes
-Relacionamento entre movimentações e contas
-Validação de autenticação do usuário
-Controle de acesso às informações do usuário logado
-🏗️ Arquitetura do Projeto
+- 🔐 **Autenticação** com JWT — login e recuperação de senha por e-mail
+- 🏦 **Contas** — cadastro, listagem e exclusão de contas bancárias
+- 💚 **Receitas** — adicionar, editar e excluir entradas financeiras
+- 🔴 **Despesas** — controle de gastos com status (Pendente/Pago)
+- 📊 **Dashboard** — gráfico de receitas vs despesas nos últimos 30 dias
+- 🎯 **Meta de saldo** — defina e acompanhe sua meta financeira
+- 👤 **Perfil** — edição de dados pessoais
 
-O backend foi estruturado seguindo arquitetura em camadas:
+---
 
-controller
-service
-repository
-entity
-security
-config
+## 🛠️ Tecnologias
 
-Essa estrutura facilita:
+### Backend
+| Tecnologia | Versão |
+|---|---|
+| Java | 21 |
+| Spring Boot | 3.2.5 |
+| Spring Security | JWT |
+| Spring Data JPA | Hibernate |
+| MySQL | 8.0 |
+| JavaMailSender | Gmail SMTP |
 
-manutenção
-escalabilidade
-organização do código
-separação de responsabilidades
-🔐 Segurança
+### Frontend
+| Tecnologia | Versão |
+|---|---|
+| React | 18 |
+| Bootstrap | 5 |
+| Recharts | - |
+| Lucide React | - |
+| Vite | - |
 
-A aplicação utiliza autenticação baseada em JWT (JSON Web Token), garantindo maior segurança no acesso às rotas protegidas.
+---
 
-Recursos implementados:
+## 🚀 Como Rodar
 
-autenticação de usuários
-autorização de rotas
-validação de token
-expiração automática de sessão
-proteção contra acesso não autorizado
-🎨 Frontend
+### Pré-requisitos
 
-O frontend foi desenvolvido com foco em:
+- [Docker](https://www.docker.com/) e Docker Compose instalados
+- [Node.js](https://nodejs.org/) 18+ instalado
+- Conta Gmail com [senha de app](https://myaccount.google.com/security) gerada
 
-interface moderna
-experiência do usuário
-visual inspirado em dashboards financeiros
+### 1. Clone o repositório
 
-📈 Objetivos do Projeto
+```bash
+git clone https://github.com/seuusuario/granacontrol.git
+cd granacontrol
+```
 
-Este projeto foi desenvolvido para aprofundar conhecimentos em:
+### 2. Configure as variáveis de ambiente do backend
 
-desenvolvimento backend
-APIs REST
-autenticação JWT
-regras de negócio
-integração frontend/backend
-arquitetura de aplicações
-persistência de dados
+Crie um arquivo `.env` na raiz do projeto ou edite diretamente o `docker-compose.yml`:
+
+```env
+JWT_SECRET=SuaChaveSecretaAqui
+SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/mydb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+SPRING_DATASOURCE_USERNAME=root
+SPRING_DATASOURCE_PASSWORD=123
+MAIL_USERNAME=seuemail@gmail.com
+MAIL_PASSWORD=suasenhadaapp
+```
+
+### 3. Suba o backend e banco com Docker
+
+```bash
+docker-compose up -d
+```
+
+Aguarde os containers subirem. Verifique com:
+
+```bash
+docker ps
+```
+
+Você verá dois containers rodando:
+- `mysql-loja` na porta `3306`
+- `backend-loja` na porta `8080`
+
+### 4. Configure o frontend
+
+Crie o arquivo `.env` dentro da pasta `frontend/granacontrol`:
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+### 5. Instale as dependências e rode o frontend
+
+```bash
+cd frontend/granacontrol
+npm install
+npm run dev
+```
+
+O frontend estará disponível em: **http://localhost:5173**
+
+---
+
+## 🐳 Containers Docker
+
+| Container | Imagem | Porta |
+|---|---|---|
+| `mysql-loja` | mysql:8.0 | 3306 |
+| `backend-loja` | build local | 8080 |
+
+### Comandos úteis
+
+```bash
+# Subir containers
+docker-compose up -d
+
+# Parar containers
+docker-compose down
+
+# Ver logs do backend
+docker logs backend-loja -f
+
+# Ver logs do banco
+docker logs mysql-loja -f
+
+# Rebuild após mudanças no backend
+docker-compose up -d --build
+```
+
+---
+
+## 📁 Estrutura do Projeto
