@@ -120,6 +120,7 @@ docker-compose up -d --build
 
 ## 📁 Estrutura do Projeto
 
+```
 granacontrol/
 ├── backend/
 │   ├── src/
@@ -140,6 +141,7 @@ granacontrol/
         │   ├── pages/
         │   └── service/
         └── package.json
+```
 ---
 
 ## 🔌 Endpoints da API
