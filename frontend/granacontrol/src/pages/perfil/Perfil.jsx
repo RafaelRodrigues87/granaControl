@@ -4,7 +4,7 @@ import { buscarUsuario, atualizarUsuario } from "../../service/UsuarioService";
 import { ListarConta } from "../../service/ContaService";
 import { ListarReceitaUsuario } from "../../service/ReceitaService";
 import { ListarDespesaUsuario } from "../../service/DespesasService";
-import { UserCircle, Mail, Phone, CreditCard, Calendar, Lock, Save, Edit3, Wallet, TrendingUp, TrendingDown, BarChart2 } from "lucide-react";
+import { UserCircle, Mail, Phone, CreditCard, Calendar, Lock, Save, Edit3, Wallet, TrendingUp, TrendingDown, BarChart2, Target, Pencil } from "lucide-react";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -13,9 +13,12 @@ function Perfil() {
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [stats, setStats] = useState({ contas: 0, receitas: 0, despesas: 0, saldoTotal: 0 });
-  const [form, setForm] = useState({
-    nome: "", telefone: "", dataNascimento: "", email: "", cpf: "", senha: ""
-  });
+  const [form, setForm] = useState({ nome: "", telefone: "", dataNascimento: "", email: "", cpf: "", senha: "" });
+
+  // META
+  const [meta, setMeta] = useState(() => Number(localStorage.getItem("metaSaldo")) || 15000);
+  const [editandoMeta, setEditandoMeta] = useState(false);
+  const [novaMetaInput, setNovaMetaInput] = useState("");
 
   useEffect(() => {
     document.title = "GranaControl - Perfil";
@@ -25,32 +28,14 @@ function Perfil() {
   async function carregarTudo() {
     try {
       const [user, contas, receitas, despesas] = await Promise.all([
-        buscarUsuario(),
-        ListarConta(),
-        ListarReceitaUsuario(),
-        ListarDespesaUsuario()
+        buscarUsuario(), ListarConta(), ListarReceitaUsuario(), ListarDespesaUsuario()
       ]);
-
       setUsuario(user);
-      setForm({
-        nome: user.nome || "",
-        telefone: user.telefone || "",
-        dataNascimento: user.dataNascimento || "",
-        email: user.email || "",
-        cpf: user.cpf || "",
-        senha: ""
-      });
-
+      setForm({ nome: user.nome || "", telefone: user.telefone || "", dataNascimento: user.dataNascimento || "", email: user.email || "", cpf: user.cpf || "", senha: "" });
       const totalReceitas = receitas.reduce((acc, r) => acc + Number(r.valor), 0);
       const totalDespesas = despesas.reduce((acc, d) => acc + Number(d.valor), 0);
       const saldoTotal = contas.reduce((acc, c) => acc + Number(c.saldo), 0);
-
-      setStats({
-        contas: contas.length,
-        receitas: totalReceitas,
-        despesas: totalDespesas,
-        saldoTotal
-      });
+      setStats({ contas: contas.length, receitas: totalReceitas, despesas: totalDespesas, saldoTotal });
     } catch (err) {
       console.error("Erro ao carregar perfil:", err);
     }
@@ -73,6 +58,26 @@ function Perfil() {
     }
   }
 
+  function handleSalvarMeta(e) {
+    e.preventDefault();
+    const valor = Number(novaMetaInput);
+    if (!valor || valor <= 0) return;
+    localStorage.setItem("metaSaldo", valor);
+    setMeta(valor);
+    setEditandoMeta(false);
+    setNovaMetaInput("");
+    // dispara evento para a sidebar atualizar
+    window.dispatchEvent(new Event("metaAtualizada"));
+  }
+
+  const porcentagem = Math.min((stats.saldoTotal / meta) * 100, 100).toFixed(0);
+
+  const getBarColor = () => {
+    if (porcentagem >= 75) return "linear-gradient(90deg, #10b981, #059669)";
+    if (porcentagem >= 40) return "linear-gradient(90deg, #f59e0b, #d97706)";
+    return "linear-gradient(90deg, #ef4444, #dc2626)";
+  };
+
   const getInicial = (nome) => nome ? nome.charAt(0).toUpperCase() : "U";
 
   const InfoItem = ({ icon, label, value, iconBg }) => (
@@ -87,7 +92,7 @@ function Perfil() {
     </div>
   );
 
-  const StatCard = ({ icon, label, value, bg, color, borderColor }) => (
+  const StatCard = ({ icon, label, value, bg, color }) => (
     <div className="card border-0 rounded-4 shadow-sm p-3" style={{ backgroundColor: "#ffffff" }}>
       <div className="d-flex align-items-center gap-3">
         <div className="d-flex align-items-center justify-content-center rounded-3" style={{ width: 48, height: 48, background: bg, flexShrink: 0 }}>
@@ -114,44 +119,20 @@ function Perfil() {
 
         <div className="row g-3">
 
-          {/* STATS CARDS */}
+          {/* STATS */}
           <div className="col-12">
             <div className="row g-3">
               <div className="col-6 col-md-3">
-                <StatCard
-                  icon={<Wallet size={22} color="#6366f1" />}
-                  label="Contas"
-                  value={stats.contas}
-                  bg="rgba(99,102,241,0.1)"
-                  color="#6366f1"
-                />
+                <StatCard icon={<Wallet size={22} color="#6366f1" />} label="Contas" value={stats.contas} bg="rgba(99,102,241,0.1)" color="#6366f1" />
               </div>
               <div className="col-6 col-md-3">
-                <StatCard
-                  icon={<TrendingUp size={22} color="#10b981" />}
-                  label="Total Receitas"
-                  value={`R$ ${stats.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
-                  bg="rgba(16,185,129,0.1)"
-                  color="#10b981"
-                />
+                <StatCard icon={<TrendingUp size={22} color="#10b981" />} label="Total Receitas" value={`R$ ${stats.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} bg="rgba(16,185,129,0.1)" color="#10b981" />
               </div>
               <div className="col-6 col-md-3">
-                <StatCard
-                  icon={<TrendingDown size={22} color="#ef4444" />}
-                  label="Total Despesas"
-                  value={`R$ ${stats.despesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
-                  bg="rgba(239,68,68,0.1)"
-                  color="#ef4444"
-                />
+                <StatCard icon={<TrendingDown size={22} color="#ef4444" />} label="Total Despesas" value={`R$ ${stats.despesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} bg="rgba(239,68,68,0.1)" color="#ef4444" />
               </div>
               <div className="col-6 col-md-3">
-                <StatCard
-                  icon={<BarChart2 size={22} color="#f59e0b" />}
-                  label="Saldo Total"
-                  value={`R$ ${stats.saldoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
-                  bg="rgba(245,158,11,0.1)"
-                  color="#f59e0b"
-                />
+                <StatCard icon={<BarChart2 size={22} color="#f59e0b" />} label="Saldo Total" value={`R$ ${stats.saldoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} bg="rgba(245,158,11,0.1)" color="#f59e0b" />
               </div>
             </div>
           </div>
@@ -160,26 +141,100 @@ function Perfil() {
           <div className="col-12 col-lg-3">
             <div className="card border-0 rounded-4 shadow-sm text-center" style={{ backgroundColor: "#ffffff" }}>
               <div className="card-body p-4">
-                <div
-                  className="d-flex align-items-center justify-content-center text-white fw-bold rounded-4 mx-auto mb-3"
-                  style={{ width: 90, height: 90, fontSize: "2.2rem", background: "linear-gradient(135deg, #6366f1, #4f46e5)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" }}
-                >
+                <div className="d-flex align-items-center justify-content-center text-white fw-bold rounded-4 mx-auto mb-3"
+                  style={{ width: 90, height: 90, fontSize: "2.2rem", background: "linear-gradient(135deg, #6366f1, #4f46e5)", boxShadow: "0 8px 24px rgba(99,102,241,0.35)" }}>
                   {usuario ? getInicial(usuario.nome) : <UserCircle size={40} />}
                 </div>
                 <h5 className="fw-bold mb-1" style={{ color: "#1e293b" }}>{usuario?.nome || "..."}</h5>
                 <small className="text-muted d-block mb-3">{usuario?.email}</small>
-                <span className="badge px-3 py-2 rounded-3" style={{ backgroundColor: "#f0fdf4", color: "#065f46", fontWeight: 600, fontSize: "0.75rem" }}>
-                  ✓ Conta ativa
-                </span>
+                <span className="badge px-3 py-2 rounded-3" style={{ backgroundColor: "#f0fdf4", color: "#065f46", fontWeight: 600, fontSize: "0.75rem" }}>✓ Conta ativa</span>
                 <hr style={{ opacity: 0.1 }} />
                 <div className="d-flex justify-content-between align-items-center">
                   <small className="text-muted">Membro desde:</small>
                   <small className="fw-bold" style={{ color: "#475569" }}>
-                    {usuario?.dataCriacao
-                      ? new Date(usuario.dataCriacao).toLocaleDateString('pt-BR', { month: "short", year: "numeric" })
-                      : "—"}
+                    {usuario?.dataCriacao ? new Date(usuario.dataCriacao).toLocaleDateString('pt-BR', { month: "short", year: "numeric" }) : "—"}
                   </small>
                 </div>
+              </div>
+            </div>
+
+            {/* CARD META ✅ */}
+            <div className="card border-0 rounded-4 shadow-sm mt-3" style={{ backgroundColor: "#ffffff" }}>
+              <div className="card-body p-4">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center justify-content-center rounded-3"
+                      style={{ width: 36, height: 36, background: "linear-gradient(135deg, #f59e0b, #d97706)" }}>
+                      <Target size={18} color="white" />
+                    </div>
+                    <span className="fw-bold text-uppercase" style={{ fontSize: "0.75rem", letterSpacing: "0.8px", color: "#64748b" }}>
+                      Meta de Saldo
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => { setEditandoMeta(!editandoMeta); setNovaMetaInput(meta); }}
+                    className="btn btn-sm d-flex align-items-center justify-content-center border-0"
+                    style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: "#f1f5f9", color: "#64748b" }}
+                  >
+                    <Pencil size={13} />
+                  </button>
+                </div>
+
+                {editandoMeta ? (
+                  <form onSubmit={handleSalvarMeta}>
+                    <input
+                      type="number"
+                      className="form-control rounded-3 border-0 mb-2"
+                      placeholder="Ex: 15000"
+                      value={novaMetaInput}
+                      onChange={(e) => setNovaMetaInput(e.target.value)}
+                      required
+                      style={{ padding: "10px 14px", backgroundColor: "#f1f5f9", fontSize: "0.9rem" }}
+                    />
+                    <div className="d-flex gap-2">
+                      <button type="button" className="btn w-100 fw-bold rounded-3 py-2"
+                        onClick={() => setEditandoMeta(false)}
+                        style={{ backgroundColor: "#f1f5f9", color: "#64748b", border: "none", fontSize: "0.8rem" }}>
+                        Cancelar
+                      </button>
+                      <button type="submit" className="btn w-100 fw-bold text-white rounded-3 py-2"
+                        style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)", border: "none", fontSize: "0.8rem" }}>
+                        Salvar
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <p className="fw-bold mb-1" style={{ color: "#1e293b", fontSize: "1.1rem" }}>
+                      R$ {meta.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </p>
+
+                    {/* BARRA */}
+                    <div style={{ width: "100%", height: 8, backgroundColor: "#f1f5f9", borderRadius: 10, overflow: "hidden", margin: "10px 0" }}>
+                      <div style={{ width: `${porcentagem}%`, height: "100%", background: getBarColor(), borderRadius: 10, transition: "width 0.8s ease" }} />
+                    </div>
+
+                    <div className="d-flex justify-content-between">
+                      <small style={{ color: "#64748b", fontWeight: 600, fontSize: "0.72rem" }}>{porcentagem}% atingido</small>
+                      <small style={{ color: "#64748b", fontSize: "0.72rem" }}>
+                        R$ {stats.saldoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} atual
+                      </small>
+                    </div>
+
+                    {stats.saldoTotal < meta ? (
+                      <div className="mt-2 p-2 rounded-3 d-flex align-items-center gap-2"
+                        style={{ backgroundColor: "#f8fafc", fontSize: "0.72rem", color: "#64748b" }}>
+                        <Wallet size={12} />
+                        Faltam R$ {(meta - stats.saldoTotal).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </div>
+                    ) : (
+                      <div className="mt-2 p-2 rounded-3 d-flex align-items-center gap-2"
+                        style={{ backgroundColor: "rgba(16,185,129,0.1)", fontSize: "0.72rem", color: "#10b981", fontWeight: 600 }}>
+                        🎉 Meta atingida!
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -188,24 +243,20 @@ function Perfil() {
           <div className="col-12 col-lg-9">
             <div className="card border-0 rounded-4 shadow-sm" style={{ backgroundColor: "#ffffff" }}>
               <div className="card-body p-4">
-
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <h5 className="fw-bold mb-0 text-uppercase" style={{ fontFamily: "'Oswald', sans-serif", color: "#1e293b", letterSpacing: "0.5px" }}>
                     Informações Pessoais
                   </h5>
                   {!editando && (
-                    <button
-                      className="btn d-flex align-items-center gap-2 fw-bold"
+                    <button className="btn d-flex align-items-center gap-2 fw-bold"
                       onClick={() => { setEditando(true); setErro(""); setSucesso(""); }}
-                      style={{ background: "linear-gradient(135deg, #6366f1, #4f46e5)", color: "white", borderRadius: 10, padding: "8px 18px", border: "none", fontSize: "0.85rem" }}
-                    >
+                      style={{ background: "linear-gradient(135deg, #6366f1, #4f46e5)", color: "white", borderRadius: 10, padding: "8px 18px", border: "none", fontSize: "0.85rem" }}>
                       <Edit3 size={16} />
                       Editar
                     </button>
                   )}
                 </div>
 
-                {/* MODO VISUALIZAÇÃO */}
                 {!editando && usuario && (
                   <div className="row g-2">
                     <div className="col-12 col-md-6">
@@ -221,12 +272,9 @@ function Perfil() {
                       <InfoItem icon={<CreditCard size={18} color="white" />} label="CPF" value={usuario.cpf} iconBg="linear-gradient(135deg, #f59e0b, #d97706)" />
                     </div>
                     <div className="col-12 col-md-6">
-                      <InfoItem
-                        icon={<Calendar size={18} color="white" />}
-                        label="Data de nascimento"
+                      <InfoItem icon={<Calendar size={18} color="white" />} label="Data de nascimento"
                         value={usuario.dataNascimento ? new Date(usuario.dataNascimento + 'T00:00:00').toLocaleDateString('pt-BR') : "—"}
-                        iconBg="linear-gradient(135deg, #8b5cf6, #7c3aed)"
-                      />
+                        iconBg="linear-gradient(135deg, #8b5cf6, #7c3aed)" />
                     </div>
                     <div className="col-12 col-md-6">
                       <InfoItem icon={<Lock size={18} color="white" />} label="Senha" value="••••••••" iconBg="linear-gradient(135deg, #64748b, #475569)" />
@@ -234,7 +282,6 @@ function Perfil() {
                   </div>
                 )}
 
-                {/* MODO EDIÇÃO */}
                 {editando && (
                   <form onSubmit={handleSalvar}>
                     <div className="row g-3">
@@ -275,9 +322,7 @@ function Perfil() {
                           style={{ padding: "12px 16px", backgroundColor: "#f1f5f9" }} />
                       </div>
                     </div>
-
                     {erro && <p className="text-danger fw-bold mt-3 mb-0" style={{ fontSize: "0.85rem" }}>⚠ {erro}</p>}
-
                     <div className="d-flex gap-3 mt-4">
                       <button type="button" className="btn fw-bold rounded-3 py-2 px-4"
                         onClick={() => { setEditando(false); setErro(""); }}
@@ -285,8 +330,7 @@ function Perfil() {
                         Cancelar
                       </button>
                       <button type="submit" className="btn fw-bold text-white rounded-3 py-2 px-4 d-flex align-items-center gap-2"
-                        disabled={loading}
-                        style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", border: "none" }}>
+                        disabled={loading} style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)", border: "none" }}>
                         <Save size={16} />
                         {loading ? "Salvando..." : "Salvar alterações"}
                       </button>
@@ -295,12 +339,11 @@ function Perfil() {
                 )}
 
                 {sucesso && !editando && (
-                    <div className="mt-3 p-3 rounded-3 d-flex align-items-center gap-2" style={{ backgroundColor: "#f0fdf4", color: "#065f46" }}>
-                        <span>✓</span>
-                        <span className="fw-bold" style={{ fontSize: "0.85rem" }}>{sucesso}</span>
+                  <div className="mt-3 p-3 rounded-3 d-flex align-items-center gap-2" style={{ backgroundColor: "#f0fdf4", color: "#065f46" }}>
+                    <span>✓</span>
+                    <span className="fw-bold" style={{ fontSize: "0.85rem" }}>{sucesso}</span>
                   </div>
                 )}
-
               </div>
             </div>
           </div>
