@@ -148,3 +148,89 @@ docker-compose up -d --build
 ---
 
 ## 📁 Estrutura do Projeto
+
+
+---
+
+## 🔌 Endpoints da API
+
+### Autenticação
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/usuarios/cadastrar` | Cadastrar usuário |
+| POST | `/usuarios/login` | Login |
+| POST | `/usuarios/recuperar-senha` | Solicitar código de recuperação |
+| POST | `/usuarios/verificar-codigo` | Redefinir senha |
+
+### Usuário (🔒 autenticado)
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/usuarios/me` | Buscar usuário logado |
+| PUT | `/usuarios/atualizar` | Atualizar perfil |
+
+### Contas (🔒 autenticado)
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/usuarios/contas/criar` | Criar conta |
+| GET | `/usuarios/contas/listar` | Listar contas |
+| GET | `/usuarios/contas/saldo-total` | Saldo total |
+| DELETE | `/usuarios/contas/deletar/{id}` | Deletar conta |
+
+### Receitas (🔒 autenticado)
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/usuarios/receitas/adicionar/{contaId}` | Adicionar receita |
+| GET | `/usuarios/receitas/listar` | Listar receitas |
+| PUT | `/usuarios/receitas/atualizar/{id}` | Atualizar receita |
+| DELETE | `/usuarios/receitas/deletar/{id}` | Deletar receita |
+
+### Despesas (🔒 autenticado)
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/usuarios/despesas/criar/{contaId}` | Criar despesa |
+| GET | `/usuarios/despesas/listar` | Listar despesas |
+| PUT | `/usuarios/despesas/atualizar/{id}` | Atualizar despesa |
+| DELETE | `/usuarios/despesas/deletar/{id}` | Deletar despesa |
+
+### Movimentações (🔒 autenticado)
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/usuarios/movimentacoes/ultimas` | Últimas 3 movimentações |
+
+---
+
+## ⚠️ Variáveis de Ambiente
+
+| Variável | Descrição | Exemplo |
+|---|---|---|
+| `JWT_SECRET` | Chave secreta do JWT | `MinhaChaveSecreta123` |
+| `SPRING_DATASOURCE_URL` | URL do banco de dados | `jdbc:mysql://mysql:3306/mydb` |
+| `SPRING_DATASOURCE_USERNAME` | Usuário do banco | `root` |
+| `SPRING_DATASOURCE_PASSWORD` | Senha do banco | `123` |
+| `MAIL_USERNAME` | E-mail Gmail | `email@gmail.com` |
+| `MAIL_PASSWORD` | Senha de app Gmail | `abcd efgh ijkl mnop` |
+| `VITE_API_URL` | URL do backend | `http://localhost:8080` |
+
+> ⚠️ **Nunca suba o `.env` para o repositório!** Adicione ao `.gitignore`.
+
+---
+
+## 🔒 Segurança
+
+- Senhas criptografadas com **BCrypt**
+- Autenticação via **JWT** com expiração de 1 hora
+- Rotas protegidas por filtro JWT
+- Recuperação de senha com código de 6 dígitos e validade de 15 minutos
+- Validação de propriedade de conta por usuário
+
+---
+
+## 👨‍💻 Autor
+
+**Rafael Rodrigues**
+
+---
+
+<div align="center">
+  Feito com ☕ e muito código
+</div>
