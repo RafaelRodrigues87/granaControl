@@ -107,10 +107,11 @@ function Perfil() {
   );
 
   return (
-    <div style={{ backgroundColor: "#f1f4f8", minHeight: "100vh" }}>
-      <Sidebar />
+   <div style={{ backgroundColor: "#f1f4f8", minHeight: "100vh" }}>
+    <Sidebar />
 
-      <div style={{ marginLeft: "260px", flexGrow: 1, padding: "24px 32px" }}>
+    {/* CONTAINER PRINCIPAL - IGUAL AO HOME */}
+    <div style={{ padding: "60px 32px 32px" }}>
 
         <div className="mb-4">
           <h1 className="fw-bold mb-0" style={{ color: "#1e293b", fontFamily: "'Oswald', sans-serif", textTransform: "uppercase" }}>Meu Perfil</h1>

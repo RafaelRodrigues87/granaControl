@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { ListarConta, CadastrarConta, deletarConta } from "../../service/ContaService";
-import { ListarReceitaUsuario } from "../../service/ReceitaService"; // Certifique-se de importar o serviço de receitas
+import { ListarReceitaUsuario } from "../../service/ReceitaService";
 import { PlusCircle, Wallet, Trash2, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 
 function Conta() {
   const [contas, setContas] = useState([]);
-  const [receitas, setReceitas] = useState([]); // Estado para armazenar todas as receitas
-  const [contaExpandida, setContaExpandida] = useState(null); // Controla qual card mostra as receitas
+  const [receitas, setReceitas] = useState([]);
+  const [contaExpandida, setContaExpandida] = useState(null);
   const [modalAberto, setModalAberto] = useState(false);
   const [nome, setNome] = useState("");
   const [saldo, setSaldo] = useState("");
@@ -15,7 +15,7 @@ function Conta() {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-    document.title = "GranaControl";
+    document.title = "GranaControl - Contas";
     carregarContas();
     carregarReceitas();
   }, []);
@@ -38,17 +38,12 @@ function Conta() {
     }
   }
 
-  // Filtra as 3 últimas receitas da conta específica
- const obterUltimasReceitas = (contaId) => {
-  return receitas
-    .filter(r => {
-      // Acessa o id dentro do objeto conta (r.conta.id)
-      const idDaContaNaReceita = r.conta?.id; 
-      return Number(idDaContaNaReceita) === Number(contaId);
-    })
-    .sort((a, b) => new Date(b.data) - new Date(a.data))
-    .slice(0, 3);
-};
+  const obterUltimasReceitas = (contaId) => {
+    return receitas
+      .filter(r => Number(r.conta?.id) === Number(contaId))
+      .sort((a, b) => new Date(b.data) - new Date(a.data))
+      .slice(0, 3);
+  };
 
   const toggleExpandir = (id) => {
     setContaExpandida(contaExpandida === id ? null : id);
@@ -72,7 +67,7 @@ function Conta() {
   }
 
   async function handleDeletar(e, contaId) {
-    e.stopPropagation(); // Evita que o clique no botão delete abra as receitas
+    e.stopPropagation();
     if (!window.confirm("Tem certeza que deseja excluir esta conta?")) return;
     try {
       await deletarConta(contaId);
@@ -83,10 +78,10 @@ function Conta() {
   }
 
   return (
-    <div className="d-flex" style={{ backgroundColor: "#f1f4f8", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#f1f4f8", minHeight: "100vh" }}>
       <Sidebar />
 
-      <div style={{ marginLeft: "260px", flexGrow: 1, padding: "40px 32px" }}>
+      <div style={{ padding: "60px 32px 32px" }}> {/* ✅ padding-top para o botão hamburguer */}
 
         {/* HEADER */}
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -117,13 +112,13 @@ function Conta() {
 
               return (
                 <div key={conta.id} className="col-12 col-md-6 col-xl-4">
-                  <div 
-                    className="card border-0 rounded-4 p-4 shadow-sm" 
+                  <div
+                    className="card border-0 rounded-4 p-4 shadow-sm"
                     onClick={() => toggleExpandir(conta.id)}
-                    style={{ 
-                      cursor: "pointer", 
+                    style={{
+                      cursor: "pointer",
                       transition: "all 0.3s ease",
-                      backgroundColor: isExpandido ? "#ffffff" : "#ffffff",
+                      backgroundColor: "#ffffff",
                       transform: isExpandido ? "scale(1.02)" : "scale(1)"
                     }}
                   >
@@ -147,15 +142,15 @@ function Conta() {
                     <h3 className="fw-bold mb-2" style={{ color: "#10b981" }}>
                       R$ {parseFloat(conta.saldo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </h3>
-                    
+
                     <div className="d-flex justify-content-between align-items-center text-muted border-top pt-2">
                       <span style={{ fontSize: "0.75rem" }}>ID: #{conta.id}</span>
                       {isExpandido ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </div>
 
-                    {/* SEÇÃO DAS ÚLTIMAS RECEITAS (EXPANSÍVEL) */}
+                    {/* ÚLTIMAS RECEITAS */}
                     {isExpandido && (
-                      <div className="mt-3 pt-3 border-top animate-fade-in">
+                      <div className="mt-3 pt-3 border-top">
                         <p className="fw-bold text-muted mb-2 small text-uppercase" style={{ letterSpacing: "0.5px" }}>Últimas Entradas</p>
                         {ultimasRec.length === 0 ? (
                           <p className="text-muted small mb-0 fst-italic">Sem receitas recentes.</p>
@@ -166,7 +161,7 @@ function Conta() {
                                 <p className="mb-0 fw-bold small text-dark text-truncate" style={{ maxWidth: "120px" }}>{rec.descricao}</p>
                                 <span className="text-muted" style={{ fontSize: "0.65rem" }}>
                                   <Calendar size={10} className="me-1" />
-                                  {new Date(rec.data).toLocaleDateString('pt-BR')}
+                                  {new Date(rec.data + 'T00:00:00').toLocaleDateString('pt-BR')}
                                 </span>
                               </div>
                               <span className="fw-bold small text-success">
@@ -185,7 +180,7 @@ function Conta() {
         </div>
       </div>
 
-      {/* MODAL CADASTRO (Mantido conforme original) */}
+      {/* MODAL */}
       {modalAberto && (
         <div
           style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1050 }}
@@ -198,38 +193,27 @@ function Conta() {
             <form onSubmit={handleCadastrar}>
               <div className="mb-3">
                 <label className="fw-bold text-muted mb-1 d-block small text-uppercase">Nome da conta</label>
-                <input
-                  type="text"
-                  className="form-control rounded-3 border-0"
-                  placeholder="Ex: Nubank, Bradesco..."
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  required
-                  style={{ padding: "12px", backgroundColor: "#f1f5f9" }}
-                />
+                <input type="text" className="form-control rounded-3 border-0" placeholder="Ex: Nubank, Bradesco..."
+                  value={nome} onChange={(e) => setNome(e.target.value)} required
+                  style={{ padding: "12px", backgroundColor: "#f1f5f9" }} />
               </div>
-
               <div className="mb-3">
                 <label className="fw-bold text-muted mb-1 d-block small text-uppercase">Saldo inicial</label>
-                <input
-                  type="number"
-                  className="form-control rounded-3 border-0"
-                  placeholder="0,00"
-                  value={saldo}
-                  onChange={(e) => setSaldo(e.target.value)}
-                  required
-                  step="0.01"
-                  style={{ padding: "12px", backgroundColor: "#f1f5f9" }}
-                />
+                <input type="number" className="form-control rounded-3 border-0" placeholder="0,00"
+                  value={saldo} onChange={(e) => setSaldo(e.target.value)} required step="0.01"
+                  style={{ padding: "12px", backgroundColor: "#f1f5f9" }} />
               </div>
 
               {erro && <p className="text-danger fw-bold mb-3 small">{erro}</p>}
 
               <div className="d-flex gap-2 mt-4">
-                <button type="button" className="btn w-50 fw-bold rounded-3" onClick={() => setModalAberto(false)} style={{ backgroundColor: "#e2e8f0", color: "#475569" }}>
+                <button type="button" className="btn w-50 fw-bold rounded-3"
+                  onClick={() => setModalAberto(false)}
+                  style={{ backgroundColor: "#e2e8f0", color: "#475569" }}>
                   Cancelar
                 </button>
-                <button type="submit" className="btn w-50 fw-bold text-white rounded-3 shadow-sm" disabled={loading} style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)" }}>
+                <button type="submit" className="btn w-50 fw-bold text-white rounded-3 shadow-sm"
+                  disabled={loading} style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)" }}>
                   {loading ? "Salvando..." : "Confirmar"}
                 </button>
               </div>

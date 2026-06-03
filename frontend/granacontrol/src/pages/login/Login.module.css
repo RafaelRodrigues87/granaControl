@@ -254,18 +254,158 @@
 }
 
 /* RESPONSIVIDADE */
+/* ====================================
+   RESPONSIVIDADE TABLET E MOBILE
+==================================== */
+
+/* TABLET */
+/* ====================================
+   RESPONSIVIDADE TABLET E MOBILE
+==================================== */
+
 @media (max-width: 900px) {
+
+  .pageWrapper {
+    padding: 20px;
+    min-height: 100vh;
+  }
+
   .mainContainer {
     flex-direction: column;
+    width: 100%;
+    max-width: 430px; /* card em pé */
     min-height: auto;
-    margin: 20px;
+    border-radius: 28px;
+    overflow: hidden;
+    margin: auto;
+  }
+
+  /* AGORA APARECE O CARD DE CIMA */
+  .brandSide {
+    display: flex;
+    width: 100%;
+    padding: 40px 28px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .logoWrapper {
+    justify-content: center;
+  }
+
+  .welcomeText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .welcomeText h1 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  .welcomeText p {
+    max-width: 280px;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .btnGhost {
+    width: 100%;
+    align-self: stretch;
+    padding: 14px;
+  }
+
+  /* FORM LOGIN */
+  .formSide {
+    width: 100%;
+    padding: 40px 28px;
+  }
+
+  .form {
+    max-width: 100%;
+  }
+
+  .formHeader {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .formHeader h2 {
+    font-size: 1.9rem;
+  }
+
+  .inputGroup input {
+    height: 54px;
+    font-size: 16px; /* evita zoom iPhone */
+  }
+
+  .btnSubmit {
+    height: 54px;
+    font-size: 0.95rem;
+  }
+
+  .formOptions {
+    justify-content: center;
+  }
+}
+
+
+/* CELULARES PEQUENOS */
+@media (max-width: 480px) {
+
+  .pageWrapper {
+    padding: 16px;
+  }
+
+  .mainContainer {
+    max-width: 100%;
+    border-radius: 24px;
   }
 
   .brandSide {
-    display: none; /* Mantendo seu padrão de esconder o lado visual no mobile */
+    padding: 32px 22px;
+    gap: 20px;
+  }
+
+  .brandName {
+    font-size: 1.5rem;
+  }
+
+  .welcomeText h1 {
+    font-size: 1.6rem;
+  }
+
+  .welcomeText p {
+    font-size: 0.88rem;
+  }
+
+  .btnGhost {
+    padding: 13px;
+    font-size: 0.9rem;
   }
 
   .formSide {
-    padding: 40px 20px;
+    padding: 32px 22px;
+  }
+
+  .formHeader h2 {
+    font-size: 1.6rem;
+  }
+
+  .formHeader p {
+    font-size: 0.88rem;
+  }
+
+  .inputGroup input {
+    height: 52px;
+    padding: 14px;
+  }
+
+  .btnSubmit {
+    padding: 14px;
+    font-size: 0.9rem;
   }
 }
